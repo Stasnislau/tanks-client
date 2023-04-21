@@ -1,7 +1,6 @@
 import { createContext, useEffect } from "react";
 
 import type { AppProps } from "next/app";
-import { Provider } from "react-redux";
 import Router  from "next/router";
 import { Store } from "../store";
 
