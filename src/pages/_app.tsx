@@ -1,6 +1,24 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import { createContext, useEffect } from "react";
+
+import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import Router  from "next/router";
+import { Store } from "../store";
+
+const store = new Store();
+export const Context = createContext<Store>(store);
+
+const existingRoutes = ["/"];
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  useEffect(() => {
+    if (!existingRoutes.includes(Router.pathname)) {
+      Router.push("/");
+    }
+  }, []);
+  return (
+    <Context.Provider value={store}>
+      <Component {...pageProps} />
+    </Context.Provider>
+  );
 }
