@@ -27,7 +27,6 @@ function Header() {
       clearInterval(intervalId);
     };
   }, [gameStarted, kills]);
-  context.startGame();
   return (
     <AppBar position="static">
       <Toolbar>

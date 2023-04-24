@@ -8,12 +8,12 @@ export class Store {
   dimensionY: number;
 
   constructor() {
-    makeAutoObservable(this);
     this.time = 0;
     this.kills = 0;
     this.gameStarted = false;
     this.dimensionX = 10;
     this.dimensionY = 10;
+    makeAutoObservable(this);
   }
 
   updateKills = (kills: number) => {

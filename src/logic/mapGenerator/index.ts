@@ -1,6 +1,6 @@
 import { mapInterface, tileInterface } from "@/interfaces";
 
-const mapGenerator = (dimensionX: number, dimensionY: number) => {
+const generateMap = (dimensionX: number, dimensionY: number) => {
   const map: mapInterface = {
     tiles: [],
     dimensionX,
@@ -12,7 +12,7 @@ const mapGenerator = (dimensionX: number, dimensionY: number) => {
       row.push({
         x: i,
         y: j,
-        occupation: 0,
+        occupation: "empty",
       });
     }
     map.tiles.push(row);
@@ -20,4 +20,4 @@ const mapGenerator = (dimensionX: number, dimensionY: number) => {
   return map;
 };
 
-export default mapGenerator;
+export default generateMap;
