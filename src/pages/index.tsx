@@ -15,7 +15,6 @@ const MainPage = observer(() => {
   });
 
   useEffect(() => {
-    console.log("useEffect called with gameStarted=", context.gameStarted);
     if (context.gameStarted) {
       setMap(generateMap(context.dimensionX, context.dimensionY));
     }
@@ -27,7 +26,6 @@ const MainPage = observer(() => {
         <button
           onClick={() => {
             context.startGame();
-            console.log("startGame called", context.gameStarted);
           }}
         >
           Start Game
