@@ -45,32 +45,63 @@ const MapComponent = ({ map }: MapComponentProps) => {
         height: "100%",
       }}
     >
-      {map.tiles.map((row, rowIndex) => {
-        switch (row[rowIndex].occupation) {
-          case "empty":
-            console.log("empty");
-            return <Box sx={[Styles.emptyTile, Styles.tile]} />;
-          case "wall":
-            console.log("wall");
-            return <Box sx={[Styles.wallTile, Styles.wallTile]} />;
-          case "player":
-            console.log("player");
-            return <Box sx={[Styles.playerTile, Styles.playerTile]} />;
-          case "ai":
-            console.log("ai");
-            return <Box sx={[Styles.enemyTile, Styles.enemyTile]} />;
-          case "ai-bullet":
-            console.log("bullet");
-            return <Box sx={[Styles.bulletTile, Styles.bulletTile]} />;
-          case "player-bullet":
-            console.log("bullet");
-            return <Box sx={[Styles.bulletTile, Styles.bulletTile]} />;
-          default:
-            console.log("error");
-            return null;
-        }
-      })}
-      Размер карты: {map.dimensionX}x{map.dimensionY}
+      {map.tiles.map((row, rowIndex) =>
+        row.map((tile, tileIndex) => {
+          switch (tile.occupation) {
+            case "empty":
+              console.log("empty");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.emptyTile, Styles.tile]}
+                />
+              );
+            case "wall":
+              console.log("wall");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.wallTile, Styles.tile]}
+                />
+              );
+            case "player":
+              console.log("player");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.playerTile, Styles.tile]}
+                />
+              );
+            case "ai":
+              console.log("ai");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.enemyTile, Styles.tile]}
+                />
+              );
+            case "ai-bullet":
+              console.log("bullet");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.bulletTile, Styles.tile]}
+                />
+              );
+            case "player-bullet":
+              console.log("bullet");
+              return (
+                <Box
+                  key={`${rowIndex}-${tileIndex}`}
+                  sx={[Styles.bulletTile, Styles.tile]}
+                />
+              );
+            default:
+              console.log("error");
+              return null;
+          }
+        })
+      )}
     </Box>
   );
 };
