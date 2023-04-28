@@ -3,8 +3,9 @@ import Header from "../Components/Header";
 import MapComponent from "@/Components/map";
 import { mapInterface } from "@/interfaces";
 import generateMap from "../logic/mapGenerator";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { observer } from "mobx-react-lite";
+import React from "react";
 
 const MainPage = observer(() => {
   const context = useContext(Context);
@@ -17,9 +18,11 @@ const MainPage = observer(() => {
     dimensionY: 0,
     tiles: [],
   });
+  const headerRef = React.createRef<HTMLDivElement>();
   useEffect(() => {
     const width = window.innerWidth;
-    const height = window.innerHeight;
+    const height = window.innerHeight - headerRef.current?.clientHeight!;
+    console.log(width, height)
     setSizes({
       width,
       height,
@@ -32,7 +35,7 @@ const MainPage = observer(() => {
   }, [context.gameStarted]);
   return (
     <div>
-      <Header />
+      <Header ref={headerRef} />
       {!context.gameStarted && (
         <button
           onClick={() => {

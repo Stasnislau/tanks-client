@@ -6,10 +6,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import React, { useRef } from "react";
 
 import { Context } from "../../pages/_app";
 
-function Header() {
+const Header = React.forwardRef<HTMLDivElement>((props, ref) => {
   const context = useContext(Context);
   const { gameStarted, kills } = context;
   const [secondsElapsed, setSecondsElapsed] = useState(0);
@@ -28,7 +29,7 @@ function Header() {
     };
   }, [gameStarted, kills]);
   return (
-    <AppBar position="static">
+    <AppBar position="static" ref={ref}>
       <Toolbar>
         <Typography
           variant="h6"
@@ -53,6 +54,7 @@ function Header() {
       </Toolbar>
     </AppBar>
   );
-}
+});
+Header.displayName = "Header";
 
 export default Header;
