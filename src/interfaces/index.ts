@@ -18,4 +18,10 @@ export interface tileInterface {
 
 export interface MapComponentProps {
   map: mapInterface;
+  sizes: sizeInterface;
+}
+
+export interface sizeInterface {
+  width: number;
+  height: number;
 }
