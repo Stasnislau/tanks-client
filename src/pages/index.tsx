@@ -22,7 +22,7 @@ const MainPage = observer(() => {
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight - headerRef.current?.clientHeight!;
-    console.log(width, height)
+
     setSizes({
       width,
       height,
