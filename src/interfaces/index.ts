@@ -8,6 +8,13 @@ export interface mapInterface {
   tiles: tileInterface[][];
   dimensionX: number;
   dimensionY: number;
+  player: playerInterface;
+}
+
+export interface playerInterface {
+  x: number;
+  y: number;
+  health: number;
 }
 
 export interface tileInterface {

@@ -5,11 +5,16 @@ const generateMap = (dimensionX: number, dimensionY: number) => {
     tiles: [],
     dimensionX,
     dimensionY,
+    player: {
+      x: 0,
+      y: 0,
+      health: 100,
+    },
   };
   for (let i = 0; i < dimensionY; i++) {
     const row: tileInterface[] = [];
     for (let j = 0; j < dimensionX; j++) {
-      if (i === 4 && j === 9) {
+      if (map.player.x === i && map.player.y === j) {
         row.push({
           x: i,
           y: j,

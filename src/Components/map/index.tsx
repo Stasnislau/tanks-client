@@ -26,7 +26,7 @@ const MapComponent = ({ map, sizes }: MapComponentProps) => {
     },
   };
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div  style={{ display: "flex", justifyContent: "center" }}>
       <Grid
         container
         spacing={0}
