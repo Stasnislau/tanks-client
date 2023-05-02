@@ -6,9 +6,17 @@ const generateMap = (dimensionX: number, dimensionY: number) => {
     dimensionX,
     dimensionY,
   };
-  for (let i = 0; i < dimensionX; i++) {
+  for (let i = 0; i < dimensionY; i++) {
     const row: tileInterface[] = [];
-    for (let j = 0; j < dimensionY; j++) {
+    for (let j = 0; j < dimensionX; j++) {
+      if (i === 4 && j === 9) {
+        row.push({
+          x: i,
+          y: j,
+          occupation: "player",
+        });
+        continue;
+      }
       row.push({
         x: i,
         y: j,

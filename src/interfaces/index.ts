@@ -25,3 +25,15 @@ export interface sizeInterface {
   width: number;
   height: number;
 }
+
+export interface MoveInterface {
+  xBefore: number;
+  yBefore: number;
+  xAfter: number;
+  yAfter: number;
+}
+
+export interface MoveValidatorProps {
+  map: mapInterface;
+  move: MoveInterface;
+}
