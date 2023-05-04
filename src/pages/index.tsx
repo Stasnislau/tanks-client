@@ -1,7 +1,8 @@
 import { Context } from "../pages/_app";
 import Header from "../Components/Header";
 import MapComponent from "@/Components/map";
-import { mapInterface } from "@/interfaces";
+
+import { debounce } from "lodash";
 import generateMap from "../logic/mapGenerator";
 import { useContext, useEffect, useState, useRef } from "react";
 import { observer } from "mobx-react-lite";
@@ -16,6 +17,7 @@ const MainPage = observer(() => {
     height: 0,
   });
   const headerRef = React.createRef<HTMLDivElement>();
+
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight - headerRef.current?.clientHeight!;
@@ -25,63 +27,60 @@ const MainPage = observer(() => {
       height,
     });
   }, []);
+
   useEffect(() => {
     if (context.gameStarted) {
       context.setMap(generateMap(10, 10));
     }
   }, [context.gameStarted]);
-
-  useEffect(() => {
-    if (context.gameStarted && isMoving) {
-      const intervalId = setInterval(() => {
-        context.map.tiles;
-        if (direction === "up") {
-          context.movePlayer("up");
-        } else if (direction === "down") {
-          context.movePlayer("down");
-        } else if (direction === "left") {
-          context.movePlayer("left");
-        } else if (direction === "right") {
-          context.movePlayer("right");
-        }
-      }, 100);
+  const handleKeyUp = debounce((e) => {
+    if (e.key === "w") {
+      setIsMoving(false);
+      setDirection("");
+    } else if (e.key === "a") {
+      setIsMoving(false);
+      setDirection("");
+    } else if (e.key === "d") {
+      setIsMoving(false);
+      setDirection("");
+    } else if (e.key === "s") {
+      setIsMoving(false);
+      setDirection("");
     }
-  }, [direction]);
+  }, 200);
+  const handleKeyDown = debounce((e) => {
+    if (e.key === "w") {
+      setIsMoving(true);
+      setDirection("up");
+    } else if (e.key === "s") {
+      setIsMoving(true);
+      setDirection("down");
+    } else if (e.key === "a") {
+      setIsMoving(true);
+      setDirection("left");
+    } else if (e.key === "d") {
+      setIsMoving(true);
+      setDirection("right");
+    }
+  }, 200);
 
   useEffect(() => {
     if (context.gameStarted) {
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "w") {
-          setIsMoving(true);
-          setDirection("up");
-        } else if (e.key === "s") {
-          setIsMoving(true);
-          setDirection("down");
-        } else if (e.key === "a") {
-          setIsMoving(true);
-          setDirection("left");
-        } else if (e.key === "d") {
-          setIsMoving(true);
-          setDirection("right");
-        }
-      });
-      window.addEventListener("keyup", (e) => {
-        if (e.key === "w") {
-          setIsMoving(false);
-          setDirection("");
-        } else if (e.key === "a") {
-          setIsMoving(false);
-          setDirection("");
-        } else if (e.key === "d") {
-          setIsMoving(false);
-          setDirection("");
-        } else if (e.key === "s") {
-          setIsMoving(false);
-          setDirection("");
-        }
-      });
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+      };
     }
-  }, [context.gameStarted]);
+  }, [context.gameStarted, handleKeyDown, handleKeyUp]);
+
+  useEffect(() => {
+    if (isMoving) {
+      context.movePlayer(direction);
+    }
+  }, [isMoving, direction]);
+
   return (
     <div>
       <Header ref={headerRef} />

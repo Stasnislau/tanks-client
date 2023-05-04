@@ -66,6 +66,7 @@ export class Store {
     this.map.tiles[this.map.player.x][this.map.player.y].occupation = "empty";
     this.map.player.x = xAfter;
     this.map.player.y = yAfter;
+    console.log("Moved from ", this.map.player.x, this.map.player.y, " to ", xAfter, yAfter);
     this.map.tiles[xAfter][yAfter].occupation = "player";
   };
 }
