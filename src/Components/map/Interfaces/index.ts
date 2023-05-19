@@ -4,8 +4,8 @@ export interface storeInterface {
   gameStarted: boolean;
 }
 
-export interface mapInterface {
-  tiles: tileInterface[][];
+export interface gameInterface {
+  map: tileInterface[][];
   dimensionX: number;
   dimensionY: number;
   players: playerInterface[];
@@ -23,39 +23,35 @@ export interface playerInterface {
 }
 
 export interface tileInterface {
-  x: number;
-  y: number;
   occupation: string; // empty, blue-team, red-team, bullet, wall
 }
 
 export interface wallInterface {
   x: number;
   y: number;
+  health: number;
 }
 
-export interface MapComponentProps {
-  map: mapInterface;
-  sizes: sizesInterface;
-}
-
-export interface MoveInterface {
-  xBefore: number;
-  yBefore: number;
+export interface tankMoveInterface {
+  id: number;
   xAfter: number;
   yAfter: number;
 }
 
-export interface MoveValidatorProps {
-  map: mapInterface;
-  move: MoveInterface;
+export interface bulletMoveInterface {
+    id: number;
+    xBefore: number;
+    yBefore: number;
+    direction: string;
 }
 
-export interface sizesInterface {
-  width: number;
-  height: number;
+export interface MoveValidatorProps {
+  map: tileInterface[][];
+  move: tankMoveInterface;
 }
 
 export interface shotInterface {
+  id: number;
   x: number;
   y: number;
   direction: string;

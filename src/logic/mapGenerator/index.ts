@@ -8,8 +8,10 @@ const generateMap = (dimensionX: number, dimensionY: number) => {
     player: {
       x: 0,
       y: 0,
-      health: 100,
+      direction: "up",
     },
+    shots: [],
+    ais: [],
   };
   for (let i = 0; i < dimensionY; i++) {
     const row: tileInterface[] = [];

@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { MapComponentProps } from "@/interfaces";
 
 const MapComponent = ({ map, sizes }: MapComponentProps) => {
-  const minimumDimension = Math.min(sizes.height, sizes.width);
+  const minimumDimension = Math.min(map.dimensionX, map.dimensionY)
   const elementSize = minimumDimension / map.dimensionX;
   const Styles = {
     tile: {
@@ -15,10 +15,10 @@ const MapComponent = ({ map, sizes }: MapComponentProps) => {
     wallTile: {
       background: "black",
     },
-    playerTile: {
+    blueTeamTile: {
       background: "blue",
     },
-    enemyTile: {
+    redTeamTile: {
       background: "red",
     },
     bulletTile: {
@@ -58,28 +58,21 @@ const MapComponent = ({ map, sizes }: MapComponentProps) => {
                       sx={[Styles.wallTile, Styles.tile]}
                     />
                   );
-                case "player":
+                case "blue-team":
                   return (
                     <Box
                       key={`${rowIndex}-${tileIndex}`}
-                      sx={[Styles.playerTile, Styles.tile]}
+                      sx={[Styles.blueTeamTile, Styles.tile]}
                     />
                   );
-                case "ai":
+                case "red-team":
                   return (
                     <Box
                       key={`${rowIndex}-${tileIndex}`}
-                      sx={[Styles.enemyTile, Styles.tile]}
+                      sx={[Styles.redTeamTile, Styles.tile]}
                     />
                   );
-                case "ai-bullet":
-                  return (
-                    <Box
-                      key={`${rowIndex}-${tileIndex}`}
-                      sx={[Styles.bulletTile, Styles.tile]}
-                    />
-                  );
-                case "player-bullet":
+                case "bullet":
                   return (
                     <Box
                       key={`${rowIndex}-${tileIndex}`}

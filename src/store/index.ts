@@ -1,10 +1,11 @@
-import { mapInterface } from "@/interfaces";
+import { mapInterface, shotInterface } from "@/interfaces";
 import { makeAutoObservable } from "mobx";
 import validateMove from "@/logic/MoveValidator";
 
 export class Store {
   time: number;
   kills: number;
+  gameLost: boolean;
   gameStarted: boolean;
   map: mapInterface;
 
@@ -12,6 +13,7 @@ export class Store {
     this.time = 0;
     this.kills = 0;
     this.gameStarted = false;
+    this.gameLost = false;
     this.map = {
       tiles: [],
       dimensionX: 0,
@@ -19,8 +21,10 @@ export class Store {
       player: {
         x: 0,
         y: 0,
-        health: 100,
+        direction: "up",
       },
+      shots: [],
+      ais: [],
     };
     makeAutoObservable(this);
   }
@@ -66,7 +70,21 @@ export class Store {
     this.map.tiles[this.map.player.x][this.map.player.y].occupation = "empty";
     this.map.player.x = xAfter;
     this.map.player.y = yAfter;
-    console.log("Moved from ", this.map.player.x, this.map.player.y, " to ", xAfter, yAfter);
+    this.map.player.direction = direction;
     this.map.tiles[xAfter][yAfter].occupation = "player";
   };
+  shoot = async () => {
+    const shot = {
+      x: this.map.player.x,
+      y: this.map.player.y,
+      direction: this.map.player.direction,
+      isPlayer: true,
+    };
+    this.map.shots.push(shot);
+    await this.moveShot(shot);
+  };
+  moveShot = async (shot: shotInterface) => {
+    
+  };
+
 }

@@ -16,7 +16,6 @@ const validateMove = ({ map, move }: MoveValidatorProps) => {
   if (move.xBefore === move.xAfter && move.yBefore === move.yAfter) {
     return false;
   }
-  // check that the move done was only one tile away in horizontal or vertical direction (not diagonal)
   if (
     move.xBefore !== move.xAfter &&
     move.yBefore !== move.yAfter &&
