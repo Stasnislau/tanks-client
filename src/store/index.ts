@@ -1,4 +1,4 @@
-import { mapInterface, shotInterface } from "@/interfaces";
+import { mapInterface, shotInterface } from "@/interfacesClient";
 import { makeAutoObservable } from "mobx";
 import validateMove from "@/logic/MoveValidator";
 

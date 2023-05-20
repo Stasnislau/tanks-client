@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material";
-import { MapComponentProps } from "@/interfaces";
+import { MapComponentProps } from "@/interfacesClient";
 
 const MapComponent = ({ map, sizes }: MapComponentProps) => {
   const minimumDimension = Math.min(map.dimensionX, map.dimensionY)
