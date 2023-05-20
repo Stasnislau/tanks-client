@@ -50,14 +50,14 @@ export interface bulletMoveInterface {
 
 export interface bulletInterface {
   id: number;
+  ownerID: number;
   x: number;
   y: number;
   direction: string;
-  isPlayer: boolean;
 }
 
 export interface mapGeneratorProps {
-  state : gameInterface;
+  state: gameInterface;
   commandStack: {
     blueNumber: number;
     redNumber: number;
