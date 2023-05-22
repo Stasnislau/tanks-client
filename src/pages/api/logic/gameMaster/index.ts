@@ -30,6 +30,7 @@ class GameMaster {
       commandStack: {} as commandStackInterface,
     });
   }
+  
 }
 
 export default GameMaster;

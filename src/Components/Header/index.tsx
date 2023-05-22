@@ -8,11 +8,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 import React, { useRef } from "react";
 
-import { Context } from "../../pages/_app";
-
 const Header = React.forwardRef<HTMLDivElement>((props, ref) => {
-  const context = useContext(Context);
-  const { gameStarted, kills } = context;
+
   const [secondsElapsed, setSecondsElapsed] = useState(0);
 
   useEffect(() => {
