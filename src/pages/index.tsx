@@ -13,9 +13,7 @@ const MainPage = () => {
     width: 0,
     height: 0,
   });
-  const socket = io("http://localhost:3001", {
-    transports: ["websocket"],
-  });
+
   const headerRef = React.createRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -28,9 +26,19 @@ const MainPage = () => {
     });
   }, []);
   const [value, setValue] = useState("None");
-  socket.on("server-client", (data: string) => {
-    setValue(data);
-  });
+
+  useEffect(() => {
+    const socket = io("http://localhost:3001", {
+      transports: ["websocket"],
+    });
+    socket.on("server-client", (data: string) => {
+      setValue(data);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   // useEffect(() => {
   //   if (context.gameStarted) {
@@ -91,7 +99,6 @@ const MainPage = () => {
       {!gameStarted && (
         <button
           onClick={() => {
-            socket.emit("something", "test");
             setGameStarted(true);
           }}
         >

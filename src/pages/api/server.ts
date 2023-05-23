@@ -10,7 +10,7 @@ const io = require("socket.io")(server, {
 let i = 1;
 setInterval(() => {
   io.emit("server-client", `message ${i++}`);
-}, 500);
+}, 1);
 io.on("connection", (socket: any) => {
   // socket.emit("server-client", "hello client");
 });
