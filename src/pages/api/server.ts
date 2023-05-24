@@ -1,3 +1,4 @@
+// import { commandStackInterface } from "./interfaces";
 const app = require("express")();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT || 3001;
@@ -7,14 +8,17 @@ const io = require("socket.io")(server, {
     methods: ["GET", "POST"],
   },
 });
-let i = 1;
-setInterval(() => {
-  io.emit("server-client", `message ${i++}`);
-}, 1);
-io.on("connection", (socket: any) => {
-  // socket.emit("server-client", "hello client");
-});
 
 server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
+
+io.on("connection", (socket: any) => {
+  console.log("a user connected");
+});
+
+ io.on("start-game", (commandStack: any) => {
+  console.log("received on server the start command", commandStack);
+});
+
+module.exports = { io };

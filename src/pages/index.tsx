@@ -28,6 +28,10 @@ const MainPage = () => {
       height,
     });
   }, []);
+  const commandStack = {
+    blueNumber: 1,
+    redNumber: 3,
+  };
 
   useEffect(() => {
     const socket = io("http://localhost:3001", {
@@ -36,6 +40,8 @@ const MainPage = () => {
     socket.on("server-client-map", (value: mapInterface) => {
       setValue(value);
     });
+    console.log("Sent map", commandStack);
+    socket.emit("start-game", { commandStack });
 
     return () => {
       socket.disconnect();
@@ -71,7 +77,7 @@ const MainPage = () => {
       setDirection("right");
     }
   }, 200);
-
+  console.log(value);
   useEffect(() => {
     if (gameStarted) {
       window.addEventListener("keydown", handleKeyDown);

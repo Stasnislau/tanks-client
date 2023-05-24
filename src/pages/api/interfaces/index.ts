@@ -1,11 +1,15 @@
+import  Map  from "../../api/logic/map";
+import Player from "../../api/logic/player";
+import Bullet from "../../api/logic/bullet";
+import Wall from "../../api/logic/wall";
 export interface gameInterface {
   kills: number;
   gameStarted: boolean;
   isVictory: boolean;
-  map: mapInterface;
-  players: playerInterface[];
-  bullets: bulletInterface[];
-  walls: wallInterface[];
+  map: Map;
+  players: Player[];
+  bullets: Bullet[];
+  walls: Wall[];
 }
 
 export interface playerInterface {
