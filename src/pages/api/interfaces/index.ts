@@ -69,3 +69,17 @@ export interface commandStackInterface {
   redNumber: number;
 }
 
+export interface sizesInterface {
+  width: number;
+  height: number;
+}
+
+export interface mapComponentProps {
+  map: mapInterface;
+  sizes: sizesInterface;
+}
+
+export interface headerInterface {
+  secondsElapsed: number;
+  kills: number;
+}

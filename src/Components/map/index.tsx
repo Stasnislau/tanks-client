@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material";
-import { MapComponentProps } from "@/interfacesClient";
+import { mapComponentProps } from "../../pages/api/interfaces";
 
-const MapComponent = ({ map, sizes }: MapComponentProps) => {
-  const minimumDimension = Math.min(map.dimensionX, map.dimensionY)
+const MapComponent = ({ map, sizes }: mapComponentProps) => {
+  const minimumDimension = Math.min(sizes.height, sizes.width);
   const elementSize = minimumDimension / map.dimensionX;
   const Styles = {
     tile: {
@@ -26,7 +26,7 @@ const MapComponent = ({ map, sizes }: MapComponentProps) => {
     },
   };
   return (
-    <div  style={{ display: "flex", justifyContent: "center" }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Grid
         container
         spacing={0}

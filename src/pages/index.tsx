@@ -1,9 +1,11 @@
 import { io, Socket } from "socket.io-client";
-// import Header from "../Components/Header";
+import MapComponent from "../Components/map";
+import Header from "../Components/Header";
 
 import { debounce, set } from "lodash";
 import { useEffect, useState } from "react";
 import React from "react";
+import { mapInterface } from "./api/interfaces";
 
 const MainPage = () => {
   const [isMoving, setIsMoving] = useState(false);
@@ -13,6 +15,7 @@ const MainPage = () => {
     width: 0,
     height: 0,
   });
+  const [value, setValue] = useState({} as mapInterface);
 
   const headerRef = React.createRef<HTMLDivElement>();
 
@@ -25,26 +28,19 @@ const MainPage = () => {
       height,
     });
   }, []);
-  const [value, setValue] = useState("None");
 
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       transports: ["websocket"],
     });
-    socket.on("server-client", (data: string) => {
-      setValue(data);
+    socket.on("server-client-map", (value: mapInterface) => {
+      setValue(value);
     });
 
     return () => {
       socket.disconnect();
     };
   }, []);
-
-  // useEffect(() => {
-  //   if (context.gameStarted) {
-  //     context.setMap(generateMap(10, 10));
-  //   }
-  // }, [context.gameStarted]);
   const handleKeyUp = debounce((e) => {
     if (e.key === "w") {
       setIsMoving(false);
@@ -76,26 +72,20 @@ const MainPage = () => {
     }
   }, 200);
 
-  // useEffect(() => {
-  //   if (context.gameStarted) {
-  //     window.addEventListener("keydown", handleKeyDown);
-  //     window.addEventListener("keyup", handleKeyUp);
-  //     return () => {
-  //       window.removeEventListener("keydown", handleKeyDown);
-  //       window.removeEventListener("keyup", handleKeyUp);
-  //     };
-  //   }
-  // }, [context.gameStarted, handleKeyDown, handleKeyUp]);
-
-  // useEffect(() => {
-  //   if (isMoving) {
-  //     context.movePlayer(direction);
-  //   }
-  // }, [isMoving, direction]);
+  useEffect(() => {
+    if (gameStarted) {
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        window.removeEventListener("keyup", handleKeyUp);
+      };
+    }
+  }, [gameStarted, handleKeyDown, handleKeyUp]);
 
   return (
     <div>
-      {/* <Header ref={headerRef} /> */}
+      <Header ref={headerRef} secondsElapsed={0} kills={0} />
       {!gameStarted && (
         <button
           onClick={() => {
@@ -105,8 +95,7 @@ const MainPage = () => {
           Start Game
         </button>
       )}
-      {/* {gameStarted && <MapComponent map={map} sizes={sizes} />} */}
-      <div>{value}</div>
+      {gameStarted && <MapComponent map={value} sizes={sizes} />}
     </div>
   );
 };
