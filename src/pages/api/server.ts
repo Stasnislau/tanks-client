@@ -15,10 +15,9 @@ server.listen(PORT, () => {
 
 io.on("connection", (socket: any) => {
   console.log("a user connected");
+  socket.on("start-game", (commandStack: any) => {
+    console.log("received on server the start command", commandStack);
+  });
 });
 
- io.on("start-game", (commandStack: any) => {
-  console.log("received on server the start command", commandStack);
-});
-
-module.exports = { io };
+module.exports = io;

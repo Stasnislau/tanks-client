@@ -77,7 +77,7 @@ const MainPage = () => {
       setDirection("right");
     }
   }, 200);
-  console.log(value);
+  console.log("Value on the page", value);
   useEffect(() => {
     if (gameStarted) {
       window.addEventListener("keydown", handleKeyDown);

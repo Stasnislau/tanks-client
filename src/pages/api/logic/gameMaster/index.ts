@@ -113,7 +113,7 @@ class GameMaster {
   }
 
   getMap(): mapInterface {
-    console.log(this.state.map);
+    console.log("get map", this.state.map);
     return this.state.map;
   }
 }
