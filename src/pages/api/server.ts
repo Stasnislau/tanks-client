@@ -1,4 +1,5 @@
-// import { commandStackInterface } from "./interfaces";
+import { commandStackInterface } from "./interfaces";
+import { GameMaster } from "./logic/gameMaster";
 const app = require("express")();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT || 3001;
@@ -13,11 +14,17 @@ server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
 
+const master = new GameMaster();
 io.on("connection", (socket: any) => {
-  console.log("a user connected");
-  socket.on("start-game", (commandStack: any) => {
-    console.log("received on server the start command", commandStack);
+  console.log("connected");
+  socket.on("start-game", (commandStack: commandStackInterface) => {
+    master.startGame(commandStack);
+    setInterval(() => {
+      socket.emit("server-client-map", master.getMap());
+    }, 500);
+  });
+  socket.on("direction", (direction: string) => {
+    console.log(`received direction: ${direction}`);
+    master.movePlayer(direction);
   });
 });
-
-module.exports = io;

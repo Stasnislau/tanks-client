@@ -42,7 +42,7 @@ class Player {
       map.tiles[xAfter][yAfter].occupation === "empty" ||
       map.tiles[xAfter][yAfter].occupation === "bullet"
     ) {
-      map.tiles[xAfter][yAfter].occupation = "player";
+      map.tiles[xAfter][yAfter].occupation = "blue-team";
       map.tiles[xAfter][yAfter].direction = direction;
       map.tiles[this.x][this.y].occupation = "empty";
       map.tiles[this.x][this.y].direction = "none";

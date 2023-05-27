@@ -7,7 +7,7 @@ import Player from "../player";
 import Map from "../map";
 import Bullet from "../bullet";
 import Wall from "../wall";
-class GameMaster {
+export class GameMaster {
   state: gameInterface;
   constructor() {
     this.state = {
@@ -31,36 +31,34 @@ class GameMaster {
   }
   generateMap(dimensionX: number, dimensionY: number) {
     const map = new Map(dimensionX, dimensionY);
-    map.generateMap({
-      state: this.state,
-      commandStack: {} as commandStackInterface,
-    });
+    map.generateMap();
+    this.state.map = map;
   }
   initializeWalls() {
     const walls = [
       {
-        x: Math.random() * this.state.map.dimensionX,
-        y: Math.random() * this.state.map.dimensionY,
+        x: Math.floor(Math.random() * this.state.map.dimensionX),
+        y: Math.floor(Math.random() * this.state.map.dimensionY),
         health: Infinity,
       },
       {
-        x: Math.random() * this.state.map.dimensionX,
-        y: Math.random() * this.state.map.dimensionY,
+        x: Math.floor(Math.random() * this.state.map.dimensionX),
+        y: Math.floor(Math.random() * this.state.map.dimensionY),
         health: Infinity,
       },
       {
-        x: Math.random() * this.state.map.dimensionX,
-        y: Math.random() * this.state.map.dimensionY,
+        x: Math.floor(Math.random() * this.state.map.dimensionX),
+        y: Math.floor(Math.random() * this.state.map.dimensionY),
         health: Infinity,
       },
       {
-        x: Math.random() * this.state.map.dimensionX,
-        y: Math.random() * this.state.map.dimensionY,
+        x: Math.floor(Math.random() * this.state.map.dimensionX),
+        y: Math.floor(Math.random() * this.state.map.dimensionY),
         health: Infinity,
       },
       {
-        x: Math.random() * this.state.map.dimensionX,
-        y: Math.random() * this.state.map.dimensionY,
+        x: Math.floor(Math.random() * this.state.map.dimensionX),
+        y: Math.floor(Math.random() * this.state.map.dimensionY),
         health: Infinity,
       },
     ];
@@ -93,7 +91,7 @@ class GameMaster {
     this.state.players.forEach((player) => {
       if (this.state.map.tiles[player.x][player.y].occupation === "empty") {
         this.state.map.tiles[player.x][player.y] = {
-          occupation: "player",
+          occupation: (player.isBlue ? "blue" : "red") + "-team",
           direction: player.direction,
         };
 
@@ -113,9 +111,6 @@ class GameMaster {
   }
 
   getMap(): mapInterface {
-    console.log("get map", this.state.map);
     return this.state.map;
   }
 }
-
-export default GameMaster;

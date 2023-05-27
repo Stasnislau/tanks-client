@@ -1,12 +1,14 @@
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import MapComponent from "../Components/map";
 import Header from "../Components/Header";
 
-import { debounce, set } from "lodash";
+import { debounce, throttle } from "lodash";
 import { useEffect, useState } from "react";
 import React from "react";
 import { mapInterface } from "./api/interfaces";
-
+const socket = io("http://localhost:3001", {
+  transports: ["websocket"],
+});
 const MainPage = () => {
   const [isMoving, setIsMoving] = useState(false);
   const [direction, setDirection] = useState("");
@@ -34,19 +36,32 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    const socket = io("http://localhost:3001", {
-      transports: ["websocket"],
-    });
     socket.on("server-client-map", (value: mapInterface) => {
       setValue(value);
     });
-    console.log("Sent map", commandStack);
     socket.emit("start-game", { commandStack });
-
+    socket.on("server-client-map", (value: mapInterface) => {
+      setValue(value);
+    });
     return () => {
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (isMoving) {
+      socket.emit("move", { direction });
+    }
+  });
+
+  useEffect(() => {
+    if (gameStarted) {
+      socket.emit("start-game", { commandStack });
+    }
+  }, [gameStarted]);
+  const sendDirection = throttle(() => {
+    socket.emit("direction", direction);
+  }, 500);
   const handleKeyUp = debounce((e) => {
     if (e.key === "w") {
       setIsMoving(false);
@@ -77,7 +92,6 @@ const MainPage = () => {
       setDirection("right");
     }
   }, 200);
-  console.log("Value on the page", value);
   useEffect(() => {
     if (gameStarted) {
       window.addEventListener("keydown", handleKeyDown);
@@ -88,7 +102,11 @@ const MainPage = () => {
       };
     }
   }, [gameStarted, handleKeyDown, handleKeyUp]);
-
+  useEffect(() => {
+    if (direction !== "") {
+      sendDirection();
+    }
+  }, [direction, sendDirection]);
   return (
     <div>
       <Header ref={headerRef} secondsElapsed={0} kills={0} />

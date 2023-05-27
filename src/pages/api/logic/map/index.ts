@@ -17,7 +17,7 @@ class Map {
     this.tiles = [];
     console.log("map created");
   }
-  generateMap({ state, commandStack }: mapGeneratorProps) {
+  generateMap() {
     const map: mapInterface = {
       tiles: [],
       dimensionX: this.dimensionX,
@@ -32,6 +32,7 @@ class Map {
         };
       }
     }
+    this.tiles = map.tiles;
   }
 }
 
