@@ -2,6 +2,7 @@ import {
   bulletInterface,
   playerInterface,
   mapInterface,
+  wallInterface,
 } from "../../interfaces";
 class Bullet {
   id: number;
@@ -23,12 +24,12 @@ class Bullet {
     this.direction = direction;
   }
   //// move 3 tiles in the direction. Check all the tiles on the way if they are empty or not. If not, return the coordinates of the tile that is not empty and id of the bullet. If all tiles are empty, return null.
-  moveBullet = (map: mapInterface, direction: string) => {
+  moveBullet = (map: mapInterface,) => {
     let x = this.x;
     let y = this.y;
     let i = 0;
     while (i < 3) {
-      switch (direction) {
+      switch (this.direction) {
         case "up":
           y--;
           break;
@@ -51,6 +52,37 @@ class Bullet {
       i++;
     }
     return null;
+  };
+
+  checkHit = (
+    map: mapInterface,
+    players: playerInterface[],
+    walls: wallInterface[]
+  ) => {
+    if (map.tiles[this.y][this.x].occupation === "bullet") {
+      return null;
+    }
+    const player = players.find(
+      (player) => player.x === this.x && player.y === this.y
+    );
+    if (player) {
+      return {
+        type: "player",
+        id: player.id,
+        bulletId: this.id,
+        ownerId: this.ownerID,
+      };
+    }
+    const wall = walls.find((wall) => wall.x === this.x && wall.y === this.y);
+    if (wall) {
+      return { type: "wall", id: wall.id, bulletId: this.id, ownerId: this.ownerID };
+    }
+    return {
+      type: "none",
+      id: -1,
+      bulletId: this.id,
+      ownerId: this.ownerID,
+    };
   };
 }
 

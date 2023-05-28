@@ -33,6 +33,7 @@ export interface tileInterface {
   direction: string;
 }
 export interface wallInterface {
+  id: number;
   x: number;
   y: number;
   health: number;
@@ -86,4 +87,9 @@ export interface mapComponentProps {
 export interface headerInterface {
   secondsElapsed: number;
   kills: number;
+}
+
+export interface coordinatesInterface {
+  x: number;
+  y: number;
 }

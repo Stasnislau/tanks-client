@@ -20,11 +20,19 @@ io.on("connection", (socket: any) => {
   socket.on("start-game", (commandStack: commandStackInterface) => {
     master.startGame(commandStack);
     setInterval(() => {
+      master.updateBullets();
       socket.emit("server-client-map", master.getMap());
     }, 500);
   });
   socket.on("direction", (direction: string) => {
     console.log(`received direction: ${direction}`);
     master.movePlayer(direction);
+  });
+  socket.on("shoot", () => {
+    const player = master.getHumanPlayer();
+    if (!player) {
+      return;
+    }
+    master.playerShoot(player);
   });
 });
