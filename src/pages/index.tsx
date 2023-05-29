@@ -13,6 +13,7 @@ const MainPage = () => {
   const [isMoving, setIsMoving] = useState(false);
   const [direction, setDirection] = useState("");
   const [gameStarted, setGameStarted] = useState(false);
+  const [shoot, setShoot] = useState(false);
   const [sizes, setSizes] = useState({
     width: 0,
     height: 0,
@@ -62,6 +63,9 @@ const MainPage = () => {
   const sendDirection = throttle(() => {
     socket.emit("direction", direction);
   }, 500);
+  const sendShoot = throttle(() => {
+    socket.emit("shoot");
+  }, 500);
   const handleKeyUp = debounce((e) => {
     if (e.key === "w") {
       setIsMoving(false);
@@ -75,6 +79,8 @@ const MainPage = () => {
     } else if (e.key === "s") {
       setIsMoving(false);
       setDirection("");
+    } else if (e.key === " ") {
+      setShoot(false);
     }
   }, 200);
   const handleKeyDown = debounce((e) => {
@@ -90,6 +96,8 @@ const MainPage = () => {
     } else if (e.key === "d") {
       setIsMoving(true);
       setDirection("right");
+    } else if (e.key === " ") {
+      setShoot(true);
     }
   }, 200);
   useEffect(() => {
@@ -107,6 +115,11 @@ const MainPage = () => {
       sendDirection();
     }
   }, [direction, sendDirection]);
+  useEffect(() => {
+    if (shoot) {
+      sendShoot();
+    }
+  }, [shoot, sendShoot]);
   return (
     <div>
       <Header ref={headerRef} secondsElapsed={0} kills={0} />

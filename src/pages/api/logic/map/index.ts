@@ -15,7 +15,6 @@ class Map {
     this.dimensionX = dimensionX;
     this.dimensionY = dimensionY;
     this.tiles = [];
-    console.log("map created");
   }
   generateMap() {
     const map: mapInterface = {

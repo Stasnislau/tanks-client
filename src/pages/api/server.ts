@@ -16,7 +16,6 @@ server.listen(PORT, () => {
 
 const master = new GameMaster();
 io.on("connection", (socket: any) => {
-  console.log("connected");
   socket.on("start-game", (commandStack: commandStackInterface) => {
     master.startGame(commandStack);
     setInterval(() => {
@@ -25,7 +24,6 @@ io.on("connection", (socket: any) => {
     }, 500);
   });
   socket.on("direction", (direction: string) => {
-    console.log(`received direction: ${direction}`);
     master.movePlayer(direction);
   });
   socket.on("shoot", () => {

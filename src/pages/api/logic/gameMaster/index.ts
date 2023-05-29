@@ -36,7 +36,7 @@ export class GameMaster {
     this.state.map = map;
   }
   initializeWalls() {
-    const walls = [
+    this.state.walls = [
       {
         id: 0,
         x: Math.floor(Math.random() * this.state.map.dimensionX),
@@ -68,7 +68,8 @@ export class GameMaster {
         health: Infinity,
       },
     ];
-    walls.forEach((wall) => {
+
+    this.state.walls.forEach((wall) => {
       if (this.state.map.tiles[wall.x][wall.y].occupation === "empty") {
         this.state.map.tiles[wall.x][wall.y] = {
           occupation: "wall",
@@ -139,13 +140,15 @@ export class GameMaster {
   }
 
   playerShoot(coordinates: coordinatesInterface) {
-    const player = this.state.players.find((player: Player) => {
-      player?.x === coordinates.x && player?.y === coordinates.y;
-    });
+    const player = this.state.players.find(
+      (player: Player) =>
+        player.x === coordinates.x &&
+        player.y === coordinates.y &&
+        !player.isDead
+    );
     if (!player || player.isDead) {
       return;
     }
-    // add handler for coordinates, the bullet should be created in front of the direction of the player
     if (player.direction === "up") {
       coordinates.y -= 1;
     } else if (player.direction === "down") {
@@ -163,24 +166,33 @@ export class GameMaster {
     ) {
       return;
     }
+    const direction = player.direction;
     const bullet = new Bullet(
       this.createIdForBullet(),
       player.id,
-      player.x,
-      player.y,
-      player.direction
+      coordinates.x,
+      coordinates.y,
+      direction
     );
     const result = bullet.checkHit(
       this.state.map,
       this.state.players,
       this.state.walls
     );
-    if (result?.type !== "none") {
-      this.state.bullets.push(bullet);
+    if (!result) {
+      console.log("result is undefined");
+      return;
     }
-    if (result?.type === "wall") {
+    if (result.type === "none") {
+      this.state.bullets.push(bullet);
+      this.state.map.tiles[bullet.x][bullet.y] = {
+        occupation: "bullet",
+        direction: bullet.direction,
+      };
+    }
+    if (result.type === "wall") {
       this.handleWallHit(result.bulletId, result.id);
-    } else if (result?.type === "player") {
+    } else if (result.type === "player") {
       this.handlePlayerHit(result.bulletId, result.id, result.ownerId);
     }
   }
@@ -228,8 +240,36 @@ export class GameMaster {
     );
   }
   updateBullets = () => {
+    if (this.state.bullets.length === 0) {
+      return;
+    }
     this.state.bullets.forEach((bullet) => {
-      bullet.moveBullet(this.state.map);
+      if (bullet.fresh) {
+        bullet.fresh = false;
+        return;
+      }
+      const result = bullet.moveBullet(this.state.map);
+      if (result) {
+        if (result.type === "border") {
+          this.state.bullets = this.state.bullets.filter(
+            (bullet) => bullet.id !== result.id
+          );
+        } else if (result.type === "wall") {
+          const wall = this.state.walls.find(
+            (wall) => wall.x === result.x && wall.y === result.y
+          ) as Wall;
+          this.handleWallHit(result.id, wall.id);
+        } else if (result.type === "player") {
+          const player = this.state.players.find(
+            (player) =>
+              player.x === result.x && player.y === result.y && !player.isDead
+          ) as Player;
+          const bullet = this.state.bullets.find(
+            (bullet) => bullet.id === result.id
+          ) as Bullet;
+          this.handlePlayerHit(bullet.id, player.id, bullet.ownerID);
+        }
+      }
     });
   };
 }

@@ -48,8 +48,8 @@ class Player {
       map.tiles[this.x][this.y].direction = "none";
       this.x = xAfter;
       this.y = yAfter;
+      this.direction = direction;
     }
   };
 }
 export default Player;
-
