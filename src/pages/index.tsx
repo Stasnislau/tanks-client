@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import MapComponent from "../Components/map";
 import Header from "../Components/Header";
+import WinnerModal from "@/Components/WinnerModal";
 
 import { debounce, throttle } from "lodash";
 import { useEffect, useState } from "react";
@@ -18,6 +19,8 @@ const MainPage = () => {
     width: 0,
     height: 0,
   });
+  const [gameOver, setGameOver] = useState<null | string>(null);
+  const [isModalOpened, setIsModalOpened] = useState(false);
   const [value, setValue] = useState({} as mapInterface);
 
   const headerRef = React.createRef<HTMLDivElement>();
@@ -43,6 +46,10 @@ const MainPage = () => {
     socket.emit("start-game", { commandStack });
     socket.on("server-client-map", (value: mapInterface) => {
       setValue(value);
+    });
+    socket.on("server-client-game-over", (status: string) => {
+      setGameOver(status);
+      setIsModalOpened(true);
     });
     return () => {
       socket.disconnect();
@@ -133,6 +140,14 @@ const MainPage = () => {
         </button>
       )}
       {gameStarted && <MapComponent map={value} sizes={sizes} />}
+      {gameOver && isModalOpened && (
+        <WinnerModal
+          status={gameOver}
+          onClose={() => {
+            setIsModalOpened(false);
+          }}
+        />
+      )}
     </div>
   );
 };

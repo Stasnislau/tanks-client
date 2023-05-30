@@ -20,6 +20,12 @@ io.on("connection", (socket: any) => {
     master.startGame(commandStack);
     setInterval(() => {
       master.updateBullets();
+      if (!master.state.isVictory) {
+        const status = master.checkIfGameOver();
+        if (status !== "none") {
+          socket.emit("server-client-game-over", status);
+        }
+      }
       socket.emit("server-client-map", master.getMap());
     }, 500);
   });

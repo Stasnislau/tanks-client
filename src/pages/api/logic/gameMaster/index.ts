@@ -149,7 +149,7 @@ export class GameMaster {
     if (!player || player.isDead) {
       return;
     }
-    console.log(player.direction, coordinates, "before")
+    console.log(player.direction, coordinates, "before");
     if (player.direction === "up") {
       coordinates.y -= 1;
     } else if (player.direction === "down") {
@@ -159,7 +159,7 @@ export class GameMaster {
     } else if (player.direction === "right") {
       coordinates.x += 1;
     }
-    console.log(player.direction, coordinates, "after")
+    console.log(player.direction, coordinates, "after");
     if (
       coordinates.x < 0 ||
       coordinates.x > this.state.map.dimensionX ||
@@ -230,6 +230,7 @@ export class GameMaster {
     }
     if (owner.id !== player.id) {
       player.isDead = true;
+      console.log("player is dead")
       this.state.map.tiles[player.x][player.y] = {
         occupation: "empty",
         direction: "none",
@@ -264,7 +265,7 @@ export class GameMaster {
           ) as Wall;
           this.handleWallHit(result.id, wall.id);
         } else if (result.type === "blue-team" || result.type === "red-team") {
-          console.log("player hit in tile")
+          console.log("player hit in tile");
           const player = this.state.players.find(
             (player) =>
               player.x === result.x && player.y === result.y && !player.isDead
@@ -278,4 +279,33 @@ export class GameMaster {
       }
     });
   };
+  checkIfGameOver() {
+    let redTeamAlive = false;
+    let blueTeamAlive = false;
+    let playersAlive = this.state.players.length;
+    this.state.players.forEach((player) => {
+      if (player.isDead) {
+        playersAlive -= 1;
+      } else {
+        if (!player.isBlue) {
+          redTeamAlive = true;
+        } else if (player.isBlue) {
+          blueTeamAlive = true;
+        }
+      }
+    });
+    if (playersAlive === 0) {
+      this.state.isVictory = true;
+      return "draw";
+    }
+    if (!redTeamAlive) {
+      this.state.isVictory = true;
+      return "blue";
+    }
+    if (!blueTeamAlive) {
+      this.state.isVictory = true;
+      return "red";
+    }
+    return "none";
+  }
 }
