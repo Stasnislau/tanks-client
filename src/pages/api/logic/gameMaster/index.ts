@@ -149,6 +149,7 @@ export class GameMaster {
     if (!player || player.isDead) {
       return;
     }
+    console.log(player.direction, coordinates, "before")
     if (player.direction === "up") {
       coordinates.y -= 1;
     } else if (player.direction === "down") {
@@ -158,6 +159,7 @@ export class GameMaster {
     } else if (player.direction === "right") {
       coordinates.x += 1;
     }
+    console.log(player.direction, coordinates, "after")
     if (
       coordinates.x < 0 ||
       coordinates.x > this.state.map.dimensionX ||
@@ -193,6 +195,7 @@ export class GameMaster {
     if (result.type === "wall") {
       this.handleWallHit(result.bulletId, result.id);
     } else if (result.type === "player") {
+      console.log("player hit 1 tile");
       this.handlePlayerHit(result.bulletId, result.id, result.ownerId);
     }
   }
@@ -225,7 +228,7 @@ export class GameMaster {
     if (!bullet || !player || !owner) {
       return;
     }
-    if (owner.id === player.id) {
+    if (owner.id !== player.id) {
       player.isDead = true;
       this.state.map.tiles[player.x][player.y] = {
         occupation: "empty",
@@ -249,6 +252,7 @@ export class GameMaster {
         return;
       }
       const result = bullet.moveBullet(this.state.map);
+      console.log("result", result);
       if (result) {
         if (result.type === "border") {
           this.state.bullets = this.state.bullets.filter(
@@ -259,7 +263,8 @@ export class GameMaster {
             (wall) => wall.x === result.x && wall.y === result.y
           ) as Wall;
           this.handleWallHit(result.id, wall.id);
-        } else if (result.type === "player") {
+        } else if (result.type === "blue-team" || result.type === "red-team") {
+          console.log("player hit in tile")
           const player = this.state.players.find(
             (player) =>
               player.x === result.x && player.y === result.y && !player.isDead
@@ -267,6 +272,7 @@ export class GameMaster {
           const bullet = this.state.bullets.find(
             (bullet) => bullet.id === result.id
           ) as Bullet;
+          console.log("player hit 3 tile");
           this.handlePlayerHit(bullet.id, player.id, bullet.ownerID);
         }
       }

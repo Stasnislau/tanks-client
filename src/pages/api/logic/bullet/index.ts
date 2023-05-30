@@ -39,10 +39,10 @@ class Bullet {
       map.tiles[this.x][this.y].direction = "none";
       switch (this.direction) {
         case "up":
-          y++;
+          y--;
           break;
         case "down":
-          y--;
+          y++;
           break;
         case "left":
           x--;
