@@ -149,7 +149,6 @@ export class GameMaster {
     if (!player || player.isDead) {
       return;
     }
-    console.log(player.direction, coordinates, "before");
     if (player.direction === "up") {
       coordinates.y -= 1;
     } else if (player.direction === "down") {
@@ -159,12 +158,11 @@ export class GameMaster {
     } else if (player.direction === "right") {
       coordinates.x += 1;
     }
-    console.log(player.direction, coordinates, "after");
     if (
       coordinates.x < 0 ||
-      coordinates.x > this.state.map.dimensionX ||
+      coordinates.x >= this.state.map.dimensionX ||
       coordinates.y < 0 ||
-      coordinates.y > this.state.map.dimensionY
+      coordinates.y >= this.state.map.dimensionY
     ) {
       return;
     }
@@ -185,16 +183,16 @@ export class GameMaster {
       console.log("result is undefined");
       return;
     }
+    this.state.bullets.push(bullet);
     if (result.type === "none") {
-      this.state.bullets.push(bullet);
       this.state.map.tiles[bullet.x][bullet.y] = {
         occupation: "bullet",
         direction: bullet.direction,
       };
-    }
-    if (result.type === "wall") {
+    } else if (result.type === "wall") {
       this.handleWallHit(result.bulletId, result.id);
     } else if (result.type === "player") {
+      console.log(result);
       console.log("player hit 1 tile");
       this.handlePlayerHit(result.bulletId, result.id, result.ownerId);
     }
@@ -226,11 +224,12 @@ export class GameMaster {
     const player = this.state.players.find((player) => player.id === playerId);
     const owner = this.state.players.find((player) => player.id === ownerID);
     if (!bullet || !player || !owner) {
+      console.log("bullet or player or owner is undefined");
       return;
     }
     if (owner.id !== player.id) {
       player.isDead = true;
-      console.log("player is dead")
+      console.log("player is dead");
       this.state.map.tiles[player.x][player.y] = {
         occupation: "empty",
         direction: "none",
@@ -273,7 +272,6 @@ export class GameMaster {
           const bullet = this.state.bullets.find(
             (bullet) => bullet.id === result.id
           ) as Bullet;
-          console.log("player hit 3 tile");
           this.handlePlayerHit(bullet.id, player.id, bullet.ownerID);
         }
       }
@@ -283,6 +281,7 @@ export class GameMaster {
     let redTeamAlive = false;
     let blueTeamAlive = false;
     let playersAlive = this.state.players.length;
+    console.log(this.state.players);
     this.state.players.forEach((player) => {
       if (player.isDead) {
         playersAlive -= 1;
@@ -295,15 +294,12 @@ export class GameMaster {
       }
     });
     if (playersAlive === 0) {
-      this.state.isVictory = true;
       return "draw";
     }
     if (!redTeamAlive) {
-      this.state.isVictory = true;
       return "blue";
     }
     if (!blueTeamAlive) {
-      this.state.isVictory = true;
       return "red";
     }
     return "none";

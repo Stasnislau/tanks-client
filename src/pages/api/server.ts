@@ -24,6 +24,7 @@ io.on("connection", (socket: any) => {
         const status = master.checkIfGameOver();
         if (status !== "none") {
           socket.emit("server-client-game-over", status);
+          master.state.isVictory = true;
         }
       }
       socket.emit("server-client-map", master.getMap());
