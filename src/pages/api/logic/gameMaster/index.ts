@@ -192,8 +192,6 @@ export class GameMaster {
     } else if (result.type === "wall") {
       this.handleWallHit(result.bulletId, result.id);
     } else if (result.type === "player") {
-      console.log(result);
-      console.log("player hit 1 tile");
       this.handlePlayerHit(result.bulletId, result.id, result.ownerId);
     }
   }
@@ -224,12 +222,10 @@ export class GameMaster {
     const player = this.state.players.find((player) => player.id === playerId);
     const owner = this.state.players.find((player) => player.id === ownerID);
     if (!bullet || !player || !owner) {
-      console.log("bullet or player or owner is undefined");
       return;
     }
     if (owner.id !== player.id) {
       player.isDead = true;
-      console.log("player is dead");
       this.state.map.tiles[player.x][player.y] = {
         occupation: "empty",
         direction: "none",
@@ -252,7 +248,6 @@ export class GameMaster {
         return;
       }
       const result = bullet.moveBullet(this.state.map);
-      console.log("result", result);
       if (result) {
         if (result.type === "border") {
           this.state.bullets = this.state.bullets.filter(
@@ -264,7 +259,6 @@ export class GameMaster {
           ) as Wall;
           this.handleWallHit(result.id, wall.id);
         } else if (result.type === "blue-team" || result.type === "red-team") {
-          console.log("player hit in tile");
           const player = this.state.players.find(
             (player) =>
               player.x === result.x && player.y === result.y && !player.isDead
@@ -281,7 +275,6 @@ export class GameMaster {
     let redTeamAlive = false;
     let blueTeamAlive = false;
     let playersAlive = this.state.players.length;
-    console.log(this.state.players);
     this.state.players.forEach((player) => {
       if (player.isDead) {
         playersAlive -= 1;

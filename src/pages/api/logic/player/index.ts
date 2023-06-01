@@ -36,6 +36,7 @@ class Player {
       yAfter < 0 ||
       yAfter >= map.dimensionY
     ) {
+      this.direction = direction;
       return;
     }
     if (
@@ -48,6 +49,8 @@ class Player {
       map.tiles[this.x][this.y].direction = "none";
       this.x = xAfter;
       this.y = yAfter;
+      this.direction = direction;
+    } else {
       this.direction = direction;
     }
   };
