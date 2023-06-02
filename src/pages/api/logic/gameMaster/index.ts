@@ -24,8 +24,8 @@ export class GameMaster {
   startGame(commandStack: commandStackInterface) {
     this.state.gameStarted = true;
     this.generateMap(10, 10);
-    this.initializeWalls();
     this.initializePlayers(commandStack);
+    this.initializeWalls();
   }
   endGame() {
     this.state.gameStarted = false;
@@ -275,7 +275,8 @@ export class GameMaster {
     let redTeamAlive = false;
     let blueTeamAlive = false;
     let playersAlive = this.state.players.length;
-    this.state.players.forEach((player) => {
+    const players = this.state.players;
+    players.forEach((player) => {
       if (player.isDead) {
         playersAlive -= 1;
       } else {
@@ -286,6 +287,10 @@ export class GameMaster {
         }
       }
     });
+    console.log("red team alive: ", redTeamAlive);
+    console.log("blue team alive: ", blueTeamAlive);
+    console.log("players alive: ", playersAlive);
+    console.log("players---: ", players)
     if (playersAlive === 0) {
       return "draw";
     }

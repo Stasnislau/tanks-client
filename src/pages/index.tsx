@@ -49,6 +49,7 @@ const MainPage = () => {
     });
     socket.on("server-client-game-over", (status: string) => {
       setGameOver(status);
+      console.log("status received", status);
       setIsModalOpened(true);
     });
     return () => {

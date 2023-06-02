@@ -21,8 +21,10 @@ io.on("connection", (socket: any) => {
     setInterval(() => {
       master.updateBullets();
       if (!master.state.isVictory) {
+        console.log("DID NOT EMIT GAME OVER")
         const status = master.checkIfGameOver();
         if (status !== "none") {
+          console.log("emitting game over----------------------------------", status)
           socket.emit("server-client-game-over", status);
           master.state.isVictory = true;
         }
