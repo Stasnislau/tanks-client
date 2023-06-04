@@ -287,10 +287,6 @@ export class GameMaster {
         }
       }
     });
-    console.log("red team alive: ", redTeamAlive);
-    console.log("blue team alive: ", blueTeamAlive);
-    console.log("players alive: ", playersAlive);
-    console.log("players---: ", players)
     if (playersAlive === 0) {
       return "draw";
     }
