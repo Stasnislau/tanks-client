@@ -1,36 +1,19 @@
 {
-  "name": "tanks-client",
-  "version": "0.1.0",
+  "name": "tanks",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "concurrently --kill-others  \"nodemon src/pages/api/server.ts\"  \"next dev\"",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@mui/material": "^5.12.1",
-    "@types/node": "18.15.12",
-    "@types/react": "18.0.37",
-    "@types/react-dom": "18.0.11",
-    "cors": "^2.8.5",
-    "eslint": "8.38.0",
-    "eslint-config-next": "13.3.0",
-    "express": "^4.18.2",
-    "lodash": "^4.17.21",
-    "mobx": "^6.9.0",
-    "mobx-react-lite": "^3.4.3",
-    "next": "13.3.0",
-    "nodemon": "^2.0.22",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1",
-    "typescript": "5.0.4"
+    "dev": "vite --port 3000",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.194",
-    "concurrently": "^8.0.1"
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "@types/three": "^0.160.0",
+    "three": "^0.160.0"
   }
 }
