@@ -8,6 +8,7 @@ import {
 import GameEntity from "../entities/gameEntity";
 import GameMap from "../map/gameMap";
 import ResourceManager from "../utils/resourceManager";
+import PlayerTank from "../entities/playerTank";
 
 class GameScene {
   private static instance = new GameScene();
@@ -43,6 +44,9 @@ class GameScene {
 
     const gameMap = new GameMap(new Vector3(0, 0, 0), 15);
     this.gameEntities.push(gameMap);
+
+    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
+    this.gameEntities.push(playerTank);
   }
 
   private resize = () => {
