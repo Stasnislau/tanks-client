@@ -4,6 +4,7 @@ import {
   Scene,
   Vector3,
   WebGLRenderer,
+  Clock,
 } from "three";
 import GameEntity from "../entities/gameEntity";
 import GameMap from "../map/gameMap";
@@ -15,6 +16,8 @@ class GameScene {
   public static getInstance() {
     return this.instance;
   }
+
+  private clock = new Clock();
 
   private width: number;
   private height: number;
@@ -71,6 +74,11 @@ class GameScene {
 
   public render = () => {
     requestAnimationFrame(this.render);
+    const deltaT = this.clock.getDelta();
+    for (let i = 0; i < this.gameEntities.length; i++) {
+        const element = this.gameEntities[i];
+        element.update(deltaT);
+    }
     this.renderer.render(this.scene, this.camera);
     
   };
