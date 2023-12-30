@@ -1,6 +1,7 @@
-import { Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { Box3, Mesh, MeshStandardMaterial, Sphere, Vector3 } from "three";
 import GameEntity from "./gameEntity";
 import ResourceManager from "../utils/resourceManager";
+import GameScene from "../scene/gameScene";
 
 type KeyboardState = {
   leftPressed: boolean;
@@ -19,6 +20,12 @@ class PlayerTank extends GameEntity {
 
   private rotation: number = 0;
 
+  constructor(position: Vector3) {
+    super(position);
+    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("keyup", this.handleKeyUp);
+  }
+
   private handleKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case "a":
@@ -32,6 +39,8 @@ class PlayerTank extends GameEntity {
         break;
       case "s":
         this.keyboardState.downPressed = true;
+        break;
+      default:
         break;
     }
   };
@@ -50,14 +59,10 @@ class PlayerTank extends GameEntity {
       case "s":
         this.keyboardState.downPressed = false;
         break;
+      default:
+        break;
     }
   };
-
-  constructor(position: Vector3) {
-    super(position);
-    window.addEventListener("keydown", this.handleKeyDown);
-    window.addEventListener("keyup", this.handleKeyUp);
-  }
 
   public load = async () => {
     const tankModel = await ResourceManager.getInstance().getModel("tank");
@@ -73,13 +78,11 @@ class PlayerTank extends GameEntity {
       (child) => child.name === "Turret"
     ) as Mesh;
 
-    const tankBodyTexture = await ResourceManager.getInstance().getTexture(
-      "tankBody"
-    );
+    const tankBodyTexture =
+      ResourceManager.getInstance().getTexture("tankBody");
 
-    const tankTurretTexture = await ResourceManager.getInstance().getTexture(
-      "tankTurret"
-    );
+    const tankTurretTexture =
+      ResourceManager.getInstance().getTexture("tankTurret");
 
     if (
       !tankBodyMesh ||
@@ -98,7 +101,14 @@ class PlayerTank extends GameEntity {
 
     this.mesh.add(tankBodyMesh);
     this.mesh.add(tankTurretMesh);
+
+    const collider = new Box3()
+      .setFromObject(this.mesh)
+      .getBoundingSphere(new Sphere(this.mesh.position.clone()));
+    collider.radius *= 0.75;
+    this.collider = collider;
   };
+
   public update = (deltaT: number) => {
     let computedRotation = this.rotation;
     let computedMovement = new Vector3();
@@ -127,7 +137,33 @@ class PlayerTank extends GameEntity {
 
     this.rotation = computedRotation;
     this.mesh.setRotationFromAxisAngle(new Vector3(0, 0, 1), computedRotation);
+
+    const testingSphere = this.collider?.clone() as Sphere;
+    testingSphere.center.add(computedMovement);
+
+    const colliders = GameScene.getInstance()
+      .getGameEntities()
+      .filter((entity) => {
+        return (
+          entity !== this &&
+          entity.getCollider() &&
+          entity!.getCollider()!.intersectsSphere(testingSphere)
+        );
+      });
+    if (colliders.length > 0) {
+      return;
+    }
+
     this.mesh.position.add(computedMovement);
+    (this.collider as Sphere).center.add(computedMovement);
+
+    GameScene.getInstance()
+      .getCamera()
+      .position.set(
+        this.mesh.position.x,
+        this.mesh.position.y,
+        GameScene.getInstance().getCamera().position.z
+      );
   };
 }
 

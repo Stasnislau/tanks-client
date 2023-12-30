@@ -20,20 +20,22 @@ class ResourceManager {
     await this.loadModel();
   };
 
-  public getModel = async (name: string) => {
+  public getModel = (name: string) => {
     return this.models.get(name);
   }
 
-    public getTexture = async (name: string) => {
+    public getTexture = (name: string) => {
         return this.textures.get(name);
     }
 
   private loadTextures = async (textureLoader: TextureLoader) => {
     const tankBodyTexture = await textureLoader.loadAsync("textures/tank-body.png");
     const tankTurretTexture = await textureLoader.loadAsync("textures/tank-turret.png");
+    const wallTexture = await textureLoader.loadAsync("textures/wall.jpg");
 
     this.textures.set("tankBody", tankBodyTexture);
     this.textures.set("tankTurret", tankTurretTexture);
+    this.textures.set("wall", wallTexture);
 
   }
 
