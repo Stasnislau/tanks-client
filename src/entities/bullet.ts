@@ -9,6 +9,7 @@ import {
   Vector3,
 } from "three";
 import GameScene from "../scene/gameScene";
+import ExplosionEffect from "../effects/explosionEffect";
 
 class Bullet extends GameEntity {
   private angle: number;
@@ -18,7 +19,7 @@ class Bullet extends GameEntity {
   }
 
   public load = async () => {
-    const bulletGeometry = new SphereGeometry(0.05);
+    const bulletGeometry = new SphereGeometry(0.075);
     const bulletMaterial = new MeshPhongMaterial({
       color: 0x262626,
     });
@@ -52,6 +53,11 @@ class Bullet extends GameEntity {
 
     if (colliders.length > 0) {
       this.shouldRemove = true;
+
+      const explosion = new ExplosionEffect(this.mesh.position, 1);
+      explosion.load().then(() => {
+        GameScene.getInstance().addToScene(explosion);
+      });
     }
   };
 

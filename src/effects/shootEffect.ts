@@ -65,8 +65,8 @@ class ShootEffect extends GameEntity {
       const speed = fireParticle.userData["speed"] as number;
 
       const computedMovement = new Vector3(
-        speed * Math.sin(angle) * deltaT * this.effectDuration * 0.75,
-        -speed * Math.cos(angle) * deltaT * this.effectDuration * 0.75,
+        -speed * Math.sin(angle) * deltaT * this.effectDuration * 0.75,
+        speed * Math.cos(angle) * deltaT * this.effectDuration * 0.75,
         0
       );
       fireParticle.position.add(computedMovement);
@@ -80,7 +80,7 @@ class ShootEffect extends GameEntity {
         const smokeParticle = element as Mesh;
         (smokeParticle.material as MeshPhongMaterial).opacity =
           this.effectDuration;
-        smokeParticle.position.add(new Vector3(0, 0, 3 * deltaT));
+        smokeParticle.position.add(new Vector3(0, 0, 1 * deltaT));
       });
     });
   };
