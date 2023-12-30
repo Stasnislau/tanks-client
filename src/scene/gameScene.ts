@@ -11,6 +11,7 @@ import GameMap from "../map/gameMap";
 import ResourceManager from "../utils/resourceManager";
 import PlayerTank from "../entities/playerTank";
 import Wall from "../map/wall";
+import EnemyTank from "../entities/enemyTank";
 
 class GameScene {
   private static instance = new GameScene();
@@ -60,6 +61,9 @@ class GameScene {
 
     const playerTank = new PlayerTank(new Vector3(7, 7, 0));
     this.gameEntities.push(playerTank);
+
+    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
+    this.gameEntities.push(enemyTank);
 
     this.createWalls();
   }

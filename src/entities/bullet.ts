@@ -10,6 +10,7 @@ import {
 } from "three";
 import GameScene from "../scene/gameScene";
 import ExplosionEffect from "../effects/explosionEffect";
+import EnemyTank from "./enemyTank";
 
 class Bullet extends GameEntity {
   private angle: number;
@@ -58,6 +59,13 @@ class Bullet extends GameEntity {
       explosion.load().then(() => {
         GameScene.getInstance().addToScene(explosion);
       });
+
+      const enemies = colliders.filter((entity) => {
+        return entity.getEntityType() === "enemy";
+      });
+      if (enemies.length > 0) {
+        (enemies[0] as EnemyTank).damage(1);
+      }
     }
   };
 

@@ -31,10 +31,14 @@ class ResourceManager {
   private loadTextures = async (textureLoader: TextureLoader) => {
     const tankBodyTexture = await textureLoader.loadAsync("textures/tank-body.png");
     const tankTurretTexture = await textureLoader.loadAsync("textures/tank-turret.png");
+    const tankBodyRedTexture = await textureLoader.loadAsync("textures/tank-body-red.png");
+    const tankTurretRedTexture = await textureLoader.loadAsync("textures/tank-turret-red.png");
     const wallTexture = await textureLoader.loadAsync("textures/wall.jpg");
 
     this.textures.set("tankBody", tankBodyTexture);
     this.textures.set("tankTurret", tankTurretTexture);
+    this.textures.set("tankBodyRed", tankBodyRedTexture);
+    this.textures.set("tankTurretRed", tankTurretRedTexture);
     this.textures.set("wall", wallTexture);
 
   }
