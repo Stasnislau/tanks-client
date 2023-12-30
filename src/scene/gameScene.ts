@@ -102,12 +102,31 @@ class GameScene {
 
   public render = () => {
     requestAnimationFrame(this.render);
+    this.removeEntities();
     const deltaT = this.clock.getDelta();
     for (let i = 0; i < this.gameEntities.length; i++) {
       const element = this.gameEntities[i];
       element.update(deltaT);
     }
     this.renderer.render(this.scene, this.camera);
+  };
+
+  public addToScene = (entity: GameEntity) => {
+    this.gameEntities.push(entity);
+    this.scene.add(entity.getMesh());
+  }
+
+  private removeEntities = () => {
+    const entitiesToRemove = this.gameEntities.filter((entity) => {
+      return entity.getShouldRemove();
+    });
+    entitiesToRemove.forEach((entity) => {
+      this.scene.remove(entity.getMesh());
+      entity.remove();
+    });
+    this.gameEntities = this.gameEntities.filter((entity) => {
+      return !entity.getShouldRemove();
+    });
   };
 }
 

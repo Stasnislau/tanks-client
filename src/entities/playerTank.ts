@@ -2,6 +2,7 @@ import { Box3, Mesh, MeshStandardMaterial, Sphere, Vector3 } from "three";
 import GameEntity from "./gameEntity";
 import ResourceManager from "../utils/resourceManager";
 import GameScene from "../scene/gameScene";
+import Bullet from "./bullet";
 
 type KeyboardState = {
   leftPressed: boolean;
@@ -21,7 +22,7 @@ class PlayerTank extends GameEntity {
   private rotation: number = 0;
 
   constructor(position: Vector3) {
-    super(position);
+    super(position, "player");
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("keyup", this.handleKeyUp);
   }
@@ -45,7 +46,7 @@ class PlayerTank extends GameEntity {
     }
   };
 
-  private handleKeyUp = (event: KeyboardEvent) => {
+  private handleKeyUp = async (event: KeyboardEvent) => {
     switch (event.key) {
       case "a":
         this.keyboardState.leftPressed = false;
@@ -59,13 +60,28 @@ class PlayerTank extends GameEntity {
       case "s":
         this.keyboardState.downPressed = false;
         break;
+      case " ":
+        await this.shoot();
+        break;
       default:
         break;
     }
   };
 
+  private shoot = async () => {
+    const offset = new Vector3(
+      Math.sin(this.rotation) * 0.3,
+      -Math.cos(this.rotation) * 0.3,
+      0
+    );
+    const bulletPosition = this.mesh.position.clone().add(offset);
+    const bullet = new Bullet(bulletPosition, this.rotation);
+    await bullet.load();
+    GameScene.getInstance().addToScene(bullet);
+  };
+
   public load = async () => {
-    const tankModel = await ResourceManager.getInstance().getModel("tank");
+    const tankModel = ResourceManager.getInstance().getModel("tank");
     if (!tankModel) {
       throw new Error("tank model not found");
     }
@@ -121,10 +137,10 @@ class PlayerTank extends GameEntity {
     }
 
     const fullCircle = Math.PI * 2;
-    if (this.rotation > fullCircle) {
-      this.rotation = fullCircle - computedRotation;
-    } else if (this.rotation < 0) {
-      this.rotation = fullCircle + computedRotation;
+    if (computedRotation > fullCircle) {
+      computedRotation = fullCircle - computedRotation;
+    } else if (computedRotation < 0) {
+      computedRotation = fullCircle + computedRotation;
     }
 
     const xMovement = movementSpeed * deltaT * Math.sin(this.rotation);
@@ -146,6 +162,7 @@ class PlayerTank extends GameEntity {
       .filter((entity) => {
         return (
           entity !== this &&
+          entity.getEntityType() !== "bullet" &&
           entity.getCollider() &&
           entity!.getCollider()!.intersectsSphere(testingSphere)
         );
