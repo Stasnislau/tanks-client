@@ -61,7 +61,7 @@ class Bullet extends GameEntity {
       });
 
       const enemies = colliders.filter((entity) => {
-        return entity.getEntityType() === "enemy";
+        return entity.getEntityType() === "enemy" || entity.getEntityType() === "wall";
       });
       if (enemies.length > 0) {
         (enemies[0] as EnemyTank).damage(1);

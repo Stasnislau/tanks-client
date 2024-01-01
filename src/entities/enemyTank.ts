@@ -23,11 +23,11 @@ class EnemyTank extends GameEntity {
     const tankSceneData = tankModel.scene.clone();
 
     const tankBodyMesh = tankSceneData.children.find(
-      (child) => child.name === "Body"
+      (child: { name: string; }) => child.name === "Body"
     ) as Mesh;
 
     const tankTurretMesh = tankSceneData.children.find(
-      (child) => child.name === "Turret"
+      (child: { name: string; }) => child.name === "Turret"
     ) as Mesh;
 
     const tankBodyTexture =

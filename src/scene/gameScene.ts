@@ -21,7 +21,7 @@ class GameScene {
 
   private clock = new Clock();
 
-  private mapSize: number = 15;
+  private mapSize: number = 25;
 
   private width: number;
   private height: number;
@@ -50,16 +50,16 @@ class GameScene {
   private createWalls = () => {
     const edge = this.mapSize - 1;
 
-    this.gameEntities.push(new Wall(new Vector3(0, 0, 0)));
-    this.gameEntities.push(new Wall(new Vector3(edge, 0, 0)));
-    this.gameEntities.push(new Wall(new Vector3(edge, edge, 0)));
-    this.gameEntities.push(new Wall(new Vector3(0, edge, 0)));
+    this.gameEntities.push(new Wall(new Vector3(0, 0, 0), Infinity));
+    this.gameEntities.push(new Wall(new Vector3(edge, 0, 0), Infinity));
+    this.gameEntities.push(new Wall(new Vector3(edge, edge, 0), Infinity));
+    this.gameEntities.push(new Wall(new Vector3(0, edge, 0), Infinity));
 
     for (let i = 1; i < edge; i++) {
-      this.gameEntities.push(new Wall(new Vector3(i, 0, 0)));
-      this.gameEntities.push(new Wall(new Vector3(0, i, 0)));
-      this.gameEntities.push(new Wall(new Vector3(edge, i, 0)));
-      this.gameEntities.push(new Wall(new Vector3(i, edge, 0)));
+      this.gameEntities.push(new Wall(new Vector3(i, 0, 0), Infinity));
+      this.gameEntities.push(new Wall(new Vector3(0, i, 0), Infinity));
+      this.gameEntities.push(new Wall(new Vector3(edge, i, 0), Infinity));
+      this.gameEntities.push(new Wall(new Vector3(i, edge, 0), Infinity));
     }
   };
 
@@ -82,14 +82,20 @@ class GameScene {
     targetElement.appendChild(this.renderer.domElement);
     const aspectRatio = this.width / this.height;
     this.camera = new PerspectiveCamera(45, aspectRatio, 1, 1000);
-    this.camera.position.set(7, 7, 15);
+    this.camera.position.set(
+      Math.floor(this.mapSize / 2),
+      Math.floor(this.mapSize / 2),
+      15
+    );
 
     window.addEventListener("resize", this.resize, false);
 
     const gameMap = new GameMap(new Vector3(0, 0, 0), this.mapSize);
     this.gameEntities.push(gameMap);
 
-    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
+    const playerTank = new PlayerTank(
+      new Vector3(Math.floor(this.mapSize / 2), Math.floor(this.mapSize / 2), 0)
+    );
     this.gameEntities.push(playerTank);
 
     const enemyTank = new EnemyTank(new Vector3(3, 3, 0));

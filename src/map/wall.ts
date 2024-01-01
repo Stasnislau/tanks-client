@@ -1,10 +1,14 @@
 import { Box3, BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import GameEntity from "../entities/gameEntity";
 import ResourceManager from "../utils/resourceManager";
+import GameScene from "../scene/gameScene";
+import ExplosionEffect from "../effects/explosionEffect";
 
 class Wall extends GameEntity {
-  constructor(position: Vector3) {
-    super(position);
+  private life = 3;
+  constructor(position: Vector3, life: number = 3) {
+    super(position, "wall");
+    this.life = life;
   }
 
   public load = async () => {
@@ -15,7 +19,25 @@ class Wall extends GameEntity {
 
     this.collider = new Box3().setFromObject(this.mesh);
   };
-  public update = () => {};
+
+  public damage = (amount: number) => {
+    this.life -= amount;
+    if (this.life <= 0) {
+      this.shouldRemove = true;
+      const explosion = new ExplosionEffect(this.mesh.position, 1);
+      explosion.load().then(() => {
+        GameScene.getInstance().addToScene(explosion);
+      });
+    }
+  };
+
+  public remove = () => {
+    this.mesh.children.forEach((child) => {
+      (child as Mesh).geometry.dispose();
+      ((child as Mesh).material as MeshStandardMaterial).dispose();
+      this.mesh.remove(child);
+    });
+  };
 }
 
 export default Wall;

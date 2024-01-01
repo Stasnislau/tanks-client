@@ -1,6 +1,6 @@
 import { Box3, Mesh, Sphere, Vector3 } from "three";
 
-type EntityType = "general" | "player" | "bullet" | "enemy";
+type EntityType = "general" | "player" | "bullet" | "enemy" | "wall";
 abstract class GameEntity {
   protected position: Vector3;
   protected mesh: Mesh = new Mesh();

@@ -1,8 +1,10 @@
 import GameScene from "../scene/gameScene"
+import Modal from "../components/modal";
 import { useState, useEffect } from "react";
 
 const GamePage = () => {
     const [isGameStarted, setIsGameStarted] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(true);
 
 
     useEffect(() => {
@@ -18,8 +20,11 @@ const GamePage = () => {
 
     return (
         <div>
-            <h1>Game Page</h1>
-            <button onClick={() => setIsGameStarted(true)}>Start Game</button>
+            <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen} startGame={() => {
+                setIsModalOpen(false);
+                setIsGameStarted(true)
+            }} />
+
             {isGameStarted && <div id="game-canvas"></div>}
         </div>
     );
