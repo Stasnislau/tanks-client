@@ -11,7 +11,7 @@ import GameMap from "../map/gameMap";
 import ResourceManager from "../utils/resourceManager";
 import PlayerTank from "../entities/playerTank";
 import Wall from "../map/wall";
-import EnemyTank from "../entities/enemyTank";
+import AiTank from "../entities/aiTank";
 
 class GameScene {
   private static instance = new GameScene();
@@ -27,6 +27,8 @@ class GameScene {
   private height: number;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera | undefined;
+
+  private isGameOver = false;
 
   private readonly scene = new Scene();
 
@@ -63,6 +65,36 @@ class GameScene {
     }
   };
 
+  private createTanks = (
+    numberOfRedTanks: number,
+    numberOfGreenTanks: number,
+    isAutonomous: boolean
+  ) => {
+    let redTanksLeft = numberOfRedTanks;
+    let greenTanksLeft = numberOfGreenTanks;
+    if (!isAutonomous && numberOfGreenTanks > 0) {
+      const playerTank = new PlayerTank(
+        new Vector3(
+          Math.floor(this.mapSize / 2),
+          Math.floor(this.mapSize / 2),
+          0
+        )
+      );
+      this.gameEntities.push(playerTank);
+      greenTanksLeft--;
+    }
+
+    for (let i = 0; i < greenTanksLeft; i++) {
+      const aiTank = new AiTank(new Vector3(21, 21, 0), "green");
+      this.gameEntities.push(aiTank);
+    }
+
+    for (let i = 0; i < redTanksLeft; i++) {
+      const aiTank = new AiTank(new Vector3(3, 3, 0), "red");
+      this.gameEntities.push(aiTank);
+    }
+  };
+
   private resize = () => {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -74,7 +106,11 @@ class GameScene {
     this.camera?.updateProjectionMatrix();
   };
 
-  public load = async () => {
+  public load = async (
+    numberOfRedTanks = 1,
+    numberOfGreenTanks = 1,
+    isAutonomous = false
+  ) => {
     const targetElement = document.getElementById("game-canvas");
     if (!targetElement) {
       throw new Error("target element not found");
@@ -93,15 +129,8 @@ class GameScene {
     const gameMap = new GameMap(new Vector3(0, 0, 0), this.mapSize);
     this.gameEntities.push(gameMap);
 
-    const playerTank = new PlayerTank(
-      new Vector3(Math.floor(this.mapSize / 2), Math.floor(this.mapSize / 2), 0)
-    );
-    this.gameEntities.push(playerTank);
-
-    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
-    this.gameEntities.push(enemyTank);
-
     this.createWalls();
+    this.createTanks(numberOfRedTanks, numberOfGreenTanks, isAutonomous);
 
     await ResourceManager.getInstance().load();
     for (let i = 0; i < this.gameEntities.length; i++) {
@@ -115,12 +144,38 @@ class GameScene {
   };
 
   public render = () => {
+    if (this.isGameOver) {
+      return;
+    }
     requestAnimationFrame(this.render);
     this.removeEntities();
+    let redTeamLeft = 0;
+    let greenTeamLeft = 0;
     const deltaT = this.clock.getDelta();
     for (let i = 0; i < this.gameEntities.length; i++) {
       const element = this.gameEntities[i];
       element.update(deltaT);
+      if (element instanceof AiTank) {
+        if (element.getTeam() === "red") {
+          redTeamLeft++;
+        } else {
+          greenTeamLeft++;
+        }
+      }
+      if (element instanceof PlayerTank) {
+        greenTeamLeft++;
+      }
+    }
+    if (redTeamLeft === 0) {
+      this.isGameOver = true;
+      alert("Green team won!");
+      window.location.reload();
+    }
+
+    if (greenTeamLeft === 0) {
+      this.isGameOver = true;
+      alert("Red team won!");
+      window.location.reload();
     }
     if (this.camera) {
       this.renderer.render(this.scene, this.camera);

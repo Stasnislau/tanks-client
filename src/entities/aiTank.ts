@@ -4,14 +4,18 @@ import ResourceManager from "../utils/resourceManager";
 import GameScene from "../scene/gameScene";
 import ExplosionEffect from "../effects/explosionEffect";
 
-class EnemyTank extends GameEntity {
+class AiTank extends GameEntity {
   private life = 3;
   private rotation: number;
   private moveSpeed = 1;
+  private team: "green" | "red";
 
-  constructor(position: Vector3) {
-    super(position, "enemy");
+  public getTeam = () => this.team;
+
+  constructor(position: Vector3, team: "green" | "red") {
+    super(position, "ai");
     this.rotation = Math.floor(Math.random() * Math.PI * 2);
+    this.team = team;
   }
 
   public load = async () => {
@@ -23,17 +27,21 @@ class EnemyTank extends GameEntity {
     const tankSceneData = tankModel.scene.clone();
 
     const tankBodyMesh = tankSceneData.children.find(
-      (child: { name: string; }) => child.name === "Body"
+      (child: { name: string }) => child.name === "Body"
     ) as Mesh;
 
     const tankTurretMesh = tankSceneData.children.find(
-      (child: { name: string; }) => child.name === "Turret"
+      (child: { name: string }) => child.name === "Turret"
     ) as Mesh;
 
     const tankBodyTexture =
-      ResourceManager.getInstance().getTexture("tankBodyRed");
+      this.team === "green"
+        ? ResourceManager.getInstance().getTexture("tankBody")
+        : ResourceManager.getInstance().getTexture("tankBodyRed");
     const tankTurretTexture =
-      ResourceManager.getInstance().getTexture("tankTurretRed");
+      this.team === "green"
+        ? ResourceManager.getInstance().getTexture("tankTurret")
+        : ResourceManager.getInstance().getTexture("tankTurretRed");
     if (
       !tankBodyMesh ||
       !tankTurretMesh ||
@@ -114,4 +122,4 @@ class EnemyTank extends GameEntity {
   };
 }
 
-export default EnemyTank;
+export default AiTank;

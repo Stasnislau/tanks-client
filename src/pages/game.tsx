@@ -9,7 +9,7 @@ const GamePage = () => {
 
     useEffect(() => {
         const startGame = async () => {
-            await GameScene.getInstance().load();
+            await GameScene.getInstance().load(1,2);
             GameScene.getInstance().render();
         }
 

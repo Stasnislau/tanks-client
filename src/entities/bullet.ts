@@ -10,7 +10,7 @@ import {
 } from "three";
 import GameScene from "../scene/gameScene";
 import ExplosionEffect from "../effects/explosionEffect";
-import EnemyTank from "./enemyTank";
+import AiTank from "./aiTank";
 
 class Bullet extends GameEntity {
   private angle: number;
@@ -61,10 +61,10 @@ class Bullet extends GameEntity {
       });
 
       const enemies = colliders.filter((entity) => {
-        return entity.getEntityType() === "enemy" || entity.getEntityType() === "wall";
+        return entity.getEntityType() === "ai" || entity.getEntityType() === "wall";
       });
       if (enemies.length > 0) {
-        (enemies[0] as EnemyTank).damage(1);
+        (enemies[0] as AiTank).damage(1);
       }
     }
   };
