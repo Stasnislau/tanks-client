@@ -26,7 +26,7 @@ class GameScene {
   private width: number;
   private height: number;
   private renderer: WebGLRenderer;
-  private camera: PerspectiveCamera;
+  private camera: PerspectiveCamera | undefined;
 
   private readonly scene = new Scene();
 
@@ -45,27 +45,6 @@ class GameScene {
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
-    const targetElement = document.querySelector<HTMLDivElement>("#app");
-    if (!targetElement) {
-      throw new Error("target element not found");
-    }
-    targetElement.appendChild(this.renderer.domElement);
-    const aspectRatio = this.width / this.height;
-    this.camera = new PerspectiveCamera(45, aspectRatio, 1, 1000);
-    this.camera.position.set(7, 7, 15);
-
-    window.addEventListener("resize", this.resize, false);
-
-    const gameMap = new GameMap(new Vector3(0, 0, 0), this.mapSize);
-    this.gameEntities.push(gameMap);
-
-    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
-    this.gameEntities.push(playerTank);
-
-    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
-    this.gameEntities.push(enemyTank);
-
-    this.createWalls();
   }
 
   private createWalls = () => {
@@ -88,11 +67,36 @@ class GameScene {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.renderer.setSize(this.width, this.height);
+    if (!this.camera) {
+      return;
+    }
     this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
+    this.camera?.updateProjectionMatrix();
   };
 
   public load = async () => {
+    const targetElement = document.getElementById("game-canvas");
+    if (!targetElement) {
+      throw new Error("target element not found");
+    }
+    targetElement.appendChild(this.renderer.domElement);
+    const aspectRatio = this.width / this.height;
+    this.camera = new PerspectiveCamera(45, aspectRatio, 1, 1000);
+    this.camera.position.set(7, 7, 15);
+
+    window.addEventListener("resize", this.resize, false);
+
+    const gameMap = new GameMap(new Vector3(0, 0, 0), this.mapSize);
+    this.gameEntities.push(gameMap);
+
+    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
+    this.gameEntities.push(playerTank);
+
+    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
+    this.gameEntities.push(enemyTank);
+
+    this.createWalls();
+
     await ResourceManager.getInstance().load();
     for (let i = 0; i < this.gameEntities.length; i++) {
       const element = this.gameEntities[i];
@@ -112,13 +116,15 @@ class GameScene {
       const element = this.gameEntities[i];
       element.update(deltaT);
     }
-    this.renderer.render(this.scene, this.camera);
+    if (this.camera) {
+      this.renderer.render(this.scene, this.camera);
+    }
   };
 
   public addToScene = (entity: GameEntity) => {
     this.gameEntities.push(entity);
     this.scene.add(entity.getMesh());
-  }
+  };
 
   private removeEntities = () => {
     const entitiesToRemove = this.gameEntities.filter((entity) => {
