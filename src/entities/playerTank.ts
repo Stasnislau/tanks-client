@@ -22,12 +22,12 @@ class PlayerTank extends GameEntity {
   };
 
   private rotation: number = 0;
-  private life = 1; // change this to 3 to make the game harder
+  private life = 1; 
 
   constructor(position: Vector3) {
     super(position, "player");
-    window.addEventListener("keydown", this.handleKeyDown);
-    window.addEventListener("keyup", this.handleKeyUp);
+    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keyup", this.handleKeyUp);
   }
 
   private handleKeyDown = (event: KeyboardEvent) => {
@@ -212,13 +212,15 @@ class PlayerTank extends GameEntity {
 
   public remove = () => {
     this.mesh.children.forEach((child) => {
+      document.removeEventListener("keydown", this.handleKeyDown);
+      document.removeEventListener("keyup", this.handleKeyUp);
       (child as Mesh).geometry.dispose();
       ((child as Mesh).material as MeshStandardMaterial).dispose();
       this.mesh.remove(child);
     });
+
     GameScene.getInstance().playerDied();
   };
-  
 }
 
 export default PlayerTank;

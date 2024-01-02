@@ -28,7 +28,7 @@ abstract class GameEntity {
     this.position = position;
     this.mesh.position.set(this.position.x, this.position.y, this.position.z);
     this.entityType = entityType;
-    this.id = Math.random().toString(36).substr(2, 9);
+    this.id = Math.random().toString(36).substr(2, 12);
   }
 
   public load = async () => {};

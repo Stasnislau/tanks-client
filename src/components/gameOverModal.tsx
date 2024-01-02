@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 interface GameOverModalProps {
     onRestart: () => void;
     outcome: "red" | "green" | "draw";
@@ -6,16 +5,9 @@ interface GameOverModalProps {
 }
 
 const GameOverModal = ({ isOpen, onRestart, outcome }: GameOverModalProps) => {
-    console.log("outcome", outcome);
 
-    const [outcomeText, setOutcomeText] = useState("");
-    useEffect(() => {
-        if (outcome === "draw") {
-            setOutcomeText("It's a draw");
-        } else {
-            setOutcomeText(`The winner is ${outcome} team!`);
-        }
-    }, [outcome]);
+    const outcomeText = outcome === "draw" ? "It's a draw" : `The winner is ${outcome} team!`;
+
     if (!isOpen) {
         return null;
     }

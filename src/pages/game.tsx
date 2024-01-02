@@ -7,7 +7,9 @@ const GamePage = () => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(true);
     const [isGameOver, setIsGameOver] = useState(false);
+    const [shouldRestart, setShouldRestart] = useState(false);
     const [outcome, setOutcome] = useState<"red" | "green" | "draw">("draw");
+    const [isFirstRun, setIsFirstRun] = useState(true);
 
 
     useEffect(() => {
@@ -15,14 +17,27 @@ const GamePage = () => {
             await GameScene.getInstance().load((outcome: "red" | "green" | "draw") => {
                 setOutcome(outcome);
                 setIsGameOver(true);
-            }, 1, 2);
+            }, 1, 1);
             GameScene.getInstance().render();
         }
 
-        if (isGameStarted) {
+        if (isGameStarted && isFirstRun) {
+            setIsFirstRun(false);
             startGame();
         }
-    }, [isGameStarted]);
+    }, [isFirstRun, isGameStarted]);
+
+    useEffect(() => {
+        const restartGame = async () => {
+            await GameScene.getInstance().restart(
+                1, 1
+            );
+        }
+        if (shouldRestart) {
+            restartGame();
+            setShouldRestart(false);
+        }
+    }, [shouldRestart]);
 
     return (
         <div>
@@ -34,6 +49,7 @@ const GamePage = () => {
             <GameOverModal isOpen={isGameOver} onRestart={() => {
                 setIsGameOver(false);
                 setIsGameStarted(true);
+                setShouldRestart(!shouldRestart);
             }
             } outcome={outcome} />
             <div id="game-canvas"></div>

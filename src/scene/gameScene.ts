@@ -32,7 +32,9 @@ class GameScene {
   private isCallbackCalled = false;
   private winner: "red" | "green" | "draw" = "draw";
 
-  private callback: (outcome: "red" | "green" | "draw") => void = (outcome) => {};
+  private callback: (outcome: "red" | "green" | "draw") => void = (
+    outcome
+  ) => {};
 
   private readonly scene = new Scene();
 
@@ -241,6 +243,33 @@ class GameScene {
         this.mapSize
       );
     }
+  };
+
+  public restart = async (
+    numberOfRedTanks = 1,
+    numberOfGreenTanks = 2,
+    isAutonomous = false
+  ) => {
+    document
+      .getElementById("game-canvas")
+      ?.removeChild(this.renderer.domElement),
+      (this.isGameOver = false);
+    this.isCallbackCalled = false;
+    this.winner = "draw";
+    this.gameEntities.forEach((entity) => {
+      this.scene.remove(entity.getMesh());
+      entity.remove();
+    });
+ 
+    this.gameEntities = [];
+    this.camera = undefined;
+    await this.load(
+      this.callback,
+      numberOfRedTanks,
+      numberOfGreenTanks,
+      isAutonomous
+    );
+    this.render();
   };
 }
 
