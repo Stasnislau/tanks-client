@@ -260,7 +260,9 @@ class GameScene {
       this.scene.remove(entity.getMesh());
       entity.remove();
     });
- 
+    this.scene.children.forEach((child) => {
+      this.scene.remove(child);
+    });
     this.gameEntities = [];
     this.camera = undefined;
     await this.load(
