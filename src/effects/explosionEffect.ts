@@ -42,7 +42,7 @@ class ExplosionEffect extends GameEntity {
     this.mesh.add(this.fireMesh);
   };
 
-  public update = (deltaT: number) => {
+  public update = async (deltaT: number) => {
     this.currentDuration -= deltaT;
     if (this.currentDuration <= 0) {
       this.shouldRemove = true;

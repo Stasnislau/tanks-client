@@ -121,7 +121,7 @@ class GameScene {
     this.camera.position.set(
       Math.floor(this.mapSize / 2),
       Math.floor(this.mapSize / 2),
-      15
+      25
     );
 
     window.addEventListener("resize", this.resize, false);
@@ -154,7 +154,27 @@ class GameScene {
     const deltaT = this.clock.getDelta();
     for (let i = 0; i < this.gameEntities.length; i++) {
       const element = this.gameEntities[i];
-      element.update(deltaT);
+      const getRandomAction = () => {
+        const actions = [
+          "rotateClockwise",
+          "down",
+          "rotateClockwise",
+          "rotateCounterClockwise",
+          "shoot",
+        ];
+        return actions[Math.floor(Math.random() * actions.length)] as
+          | "up"
+          | "down"
+          | "rotateClockwise"
+          | "rotateCounterClockwise"
+          | "shoot";
+      };
+      if (element.getEntityType() === "ai")
+        element.update(deltaT, {
+          id: element.getId(),
+          action: getRandomAction(),
+        });
+      else element.update(deltaT);
       if (element instanceof AiTank) {
         if (element.getTeam() === "red") {
           redTeamLeft++;

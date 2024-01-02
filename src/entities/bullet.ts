@@ -11,12 +11,16 @@ import {
 import GameScene from "../scene/gameScene";
 import ExplosionEffect from "../effects/explosionEffect";
 import AiTank from "./aiTank";
+import Wall from "../map/wall";
+import PlayerTank from "./playerTank";
 
 class Bullet extends GameEntity {
   private angle: number;
-  constructor(position: Vector3, angle: number) {
+  private shooterId: string;
+  constructor(position: Vector3, angle: number, shooterId: string ) {
     super(position, "bullet");
     this.angle = angle;
+    this.shooterId = shooterId;
   }
 
   public load = async () => {
@@ -32,8 +36,8 @@ class Bullet extends GameEntity {
       .getBoundingSphere(new Sphere(this.mesh.position));
   };
 
-  public update = (deltaT: number) => {
-    const travelSpeed = 9;
+  public update = async (deltaT: number) => {
+    const travelSpeed = 15; // don't get lower, because ai may die because of its own bullet
     const computedMovement = new Vector3(
       travelSpeed * Math.sin(this.angle) * deltaT,
       -travelSpeed * Math.cos(this.angle) * deltaT,
@@ -47,7 +51,8 @@ class Bullet extends GameEntity {
         return (
           entity !== this &&
           entity.getCollider() &&
-          entity.getEntityType() !== "player" &&
+          entity.getEntityType() !== "bullet" &&
+          entity.getId() !== this.shooterId &&
           entity.getCollider()!.intersectsSphere(this.collider as Sphere)
         );
       });
@@ -61,10 +66,10 @@ class Bullet extends GameEntity {
       });
 
       const enemies = colliders.filter((entity) => {
-        return entity.getEntityType() === "ai" || entity.getEntityType() === "wall";
+        return entity.getEntityType() === "ai" || entity.getEntityType() === "wall" || entity.getEntityType() === "player";
       });
       if (enemies.length > 0) {
-        (enemies[0] as AiTank).damage(1);
+        (enemies[0] as AiTank | Wall | PlayerTank).damage(1);
       }
     }
   };

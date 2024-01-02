@@ -14,7 +14,7 @@ class MapTile extends GameEntity {
         this.mesh = new Mesh(geometry, material);
         this.mesh.position.set(this.position.x, this.position.y, this.position.z);
     };
-    public update = () => {};
+    public update = async () => {};
     }
 
 class GameMap extends GameEntity {
@@ -39,7 +39,7 @@ class GameMap extends GameEntity {
     }
 
   };
-  public update = () => {};
+  public update = async () => {};
 }
 
 export default GameMap;

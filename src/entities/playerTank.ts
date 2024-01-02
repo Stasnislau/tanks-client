@@ -4,6 +4,7 @@ import ResourceManager from "../utils/resourceManager";
 import GameScene from "../scene/gameScene";
 import Bullet from "./bullet";
 import ShootEffect from "../effects/shootEffect";
+import ExplosionEffect from "../effects/explosionEffect";
 
 type KeyboardState = {
   leftPressed: boolean;
@@ -21,6 +22,7 @@ class PlayerTank extends GameEntity {
   };
 
   private rotation: number = 0;
+  private life = Infinity;
 
   constructor(position: Vector3) {
     super(position, "player");
@@ -76,7 +78,7 @@ class PlayerTank extends GameEntity {
       0.5
     );
     const bulletPosition = this.mesh.position.clone().add(offset);
-    const bullet = new Bullet(bulletPosition, this.rotation);
+    const bullet = new Bullet(bulletPosition, this.rotation, this.getId());
     await bullet.load();
 
     const shootEffect = new ShootEffect(
@@ -98,11 +100,11 @@ class PlayerTank extends GameEntity {
     const tankSceneData = tankModel.scene.clone();
 
     const tankBodyMesh = tankSceneData.children.find(
-      (child) => child.name === "Body"
+      (child: { name: string }) => child.name === "Body"
     ) as Mesh;
 
     const tankTurretMesh = tankSceneData.children.find(
-      (child) => child.name === "Turret"
+      (child: { name: string }) => child.name === "Turret"
     ) as Mesh;
 
     const tankBodyTexture =
@@ -136,7 +138,7 @@ class PlayerTank extends GameEntity {
     this.collider = collider;
   };
 
-  public update = (deltaT: number) => {
+  public update = async (deltaT: number) => {
     let computedRotation = this.rotation;
     let computedMovement = new Vector3();
     const movementSpeed = 2;
@@ -185,13 +187,35 @@ class PlayerTank extends GameEntity {
     this.mesh.position.add(computedMovement);
     (this.collider as Sphere).center.add(computedMovement);
 
-    GameScene.getInstance()
+    const cameraPositionZ =
+      GameScene?.getInstance().getCamera()?.position.z || 15;
+
+    GameScene?.getInstance()
       .getCamera()
-      .position.set(
+      ?.position.set(
         this.mesh.position.x,
         this.mesh.position.y,
-        GameScene.getInstance().getCamera().position.z
+        cameraPositionZ
       );
+  };
+
+  public damage = (amount: number) => {
+    this.life -= amount;
+    if (this.life <= 0) {
+      this.shouldRemove = true;
+      const explosion = new ExplosionEffect(this.mesh.position, 1.4);
+      explosion.load().then(() => {
+        GameScene.getInstance().addToScene(explosion);
+      });
+    }
+  };
+
+  public remove = () => {
+    this.mesh.children.forEach((child) => {
+      (child as Mesh).geometry.dispose();
+      ((child as Mesh).material as MeshStandardMaterial).dispose();
+      this.mesh.remove(child);
+    });
   };
 }
 

@@ -54,7 +54,7 @@ class ShootEffect extends GameEntity {
     this.mesh.add(this.smoke);
   };
 
-  public update = (deltaT: number) => {
+  public update = async (deltaT: number) => {
     this.effectDuration -= deltaT;
     if (this.effectDuration <= 0) {
       this.shouldRemove = true;
