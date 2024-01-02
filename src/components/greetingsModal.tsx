@@ -1,11 +1,7 @@
-import { useState, useRef } from 'react';
-import useClickOutside from '../hooks/useClickOutside';
 
-const Modal = (
-    { isOpen, setIsOpen, startGame }: { isOpen: boolean, setIsOpen: (isOpen: boolean) => void, startGame: () => void }
+const GreetingsModal = (
+    { isOpen, startGame }: { isOpen: boolean, startGame: () => void }
 ) => {
-    const ref = useRef<HTMLDivElement>(null);
-    useClickOutside(ref, () => setIsOpen(false));
     if (!isOpen) {
         return null;
     }
@@ -28,7 +24,6 @@ const Modal = (
                 padding: '20px',
                 borderRadius: '10px'
             }}
-                ref={ref}
             >
                 <h2>Welcome to the Tank Game!</h2>
                 <p>This is a game where you control a tank and try to defeat your enemies.</p>
@@ -39,4 +34,4 @@ const Modal = (
 }
 
 
-export default Modal;
+export default GreetingsModal;

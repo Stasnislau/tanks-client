@@ -30,8 +30,9 @@ class GameScene {
 
   private isGameOver = false;
   private isCallbackCalled = false;
+  private winner: "red" | "green" | "draw" = "draw";
 
-  private callback: () => void = () => {};
+  private callback: (outcome: "red" | "green" | "draw") => void = (outcome) => {};
 
   private readonly scene = new Scene();
 
@@ -110,7 +111,7 @@ class GameScene {
   };
 
   public load = async (
-    callback: () => void,
+    callback: (outcome: "red" | "green" | "draw") => void,
     numberOfRedTanks = 1,
     numberOfGreenTanks = 1,
     isAutonomous = false
@@ -156,7 +157,7 @@ class GameScene {
       setTimeout(() => {
         if (this.isCallbackCalled) return;
         this.isCallbackCalled = true;
-        this.callback();
+        this.callback(this.winner);
       }, 500);
     }
     requestAnimationFrame(this.render);
@@ -167,6 +168,7 @@ class GameScene {
     for (let i = 0; i < this.gameEntities.length; i++) {
       const element = this.gameEntities[i];
       const getRandomAction = () => {
+        // TODO: change this function to use the neural network to get the action
         const actions = [
           "rotateClockwise",
           "down",
@@ -198,11 +200,14 @@ class GameScene {
         greenTeamLeft++;
       }
     }
-    if (redTeamLeft === 0 && !this.isGameOver) {
+    if (redTeamLeft === 0 && greenTeamLeft === 0 && !this.isGameOver) {
+      this.winner = "draw";
       this.isGameOver = true;
-    }
-
-    if (greenTeamLeft === 0 && !this.isGameOver) {
+    } else if (redTeamLeft === 0 && !this.isGameOver) {
+      this.winner = "green";
+      this.isGameOver = true;
+    } else if (greenTeamLeft === 0 && !this.isGameOver) {
+      this.winner = "red";
       this.isGameOver = true;
     }
     if (this.camera) {
