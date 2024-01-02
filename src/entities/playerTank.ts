@@ -22,7 +22,7 @@ class PlayerTank extends GameEntity {
   };
 
   private rotation: number = 0;
-  private life = Infinity;
+  private life = 1; // change this to 3 to make the game harder
 
   constructor(position: Vector3) {
     super(position, "player");
@@ -216,7 +216,9 @@ class PlayerTank extends GameEntity {
       ((child as Mesh).material as MeshStandardMaterial).dispose();
       this.mesh.remove(child);
     });
+    GameScene.getInstance().playerDied();
   };
+  
 }
 
 export default PlayerTank;

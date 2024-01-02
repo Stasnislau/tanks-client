@@ -29,6 +29,9 @@ class GameScene {
   private camera: PerspectiveCamera | undefined;
 
   private isGameOver = false;
+  private isCallbackCalled = false;
+
+  private callback: () => void = () => {};
 
   private readonly scene = new Scene();
 
@@ -107,6 +110,7 @@ class GameScene {
   };
 
   public load = async (
+    callback: () => void,
     numberOfRedTanks = 1,
     numberOfGreenTanks = 1,
     isAutonomous = false
@@ -121,10 +125,11 @@ class GameScene {
     this.camera.position.set(
       Math.floor(this.mapSize / 2),
       Math.floor(this.mapSize / 2),
-      25
+      isAutonomous ? this.mapSize : Math.ceil(this.mapSize / 2)
     );
 
     window.addEventListener("resize", this.resize, false);
+    this.callback = callback;
 
     const gameMap = new GameMap(new Vector3(0, 0, 0), this.mapSize);
     this.gameEntities.push(gameMap);
@@ -144,8 +149,15 @@ class GameScene {
   };
 
   public render = () => {
-    if (this.isGameOver) {
+    if (this.isCallbackCalled) {
       return;
+    }
+    if (this.isGameOver) {
+      setTimeout(() => {
+        if (this.isCallbackCalled) return;
+        this.isCallbackCalled = true;
+        this.callback();
+      }, 500);
     }
     requestAnimationFrame(this.render);
     this.removeEntities();
@@ -186,16 +198,12 @@ class GameScene {
         greenTeamLeft++;
       }
     }
-    if (redTeamLeft === 0) {
+    if (redTeamLeft === 0 && !this.isGameOver) {
       this.isGameOver = true;
-      alert("Green team won!");
-      window.location.reload();
     }
 
-    if (greenTeamLeft === 0) {
+    if (greenTeamLeft === 0 && !this.isGameOver) {
       this.isGameOver = true;
-      alert("Red team won!");
-      window.location.reload();
     }
     if (this.camera) {
       this.renderer.render(this.scene, this.camera);
@@ -218,6 +226,16 @@ class GameScene {
     this.gameEntities = this.gameEntities.filter((entity) => {
       return !entity.getShouldRemove();
     });
+  };
+
+  public playerDied = () => {
+    if (this.camera) {
+      this.camera.position.set(
+        Math.floor(this.mapSize / 2),
+        Math.floor(this.mapSize / 2),
+        this.mapSize
+      );
+    }
   };
 }
 

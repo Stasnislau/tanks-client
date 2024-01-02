@@ -37,7 +37,7 @@ class Bullet extends GameEntity {
   };
 
   public update = async (deltaT: number) => {
-    const travelSpeed = 15; // don't get lower, because ai may die because of its own bullet
+    const travelSpeed = 9; 
     const computedMovement = new Vector3(
       travelSpeed * Math.sin(this.angle) * deltaT,
       -travelSpeed * Math.cos(this.angle) * deltaT,

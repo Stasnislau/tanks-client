@@ -5,11 +5,15 @@ import { useState, useEffect } from "react";
 const GamePage = () => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isGameOver, setIsGameOver] = useState(false);
 
 
     useEffect(() => {
         const startGame = async () => {
-            await GameScene.getInstance().load(1,2);
+            await GameScene.getInstance().load(() => {
+                setIsGameOver(true);
+                console.log("Game Over");
+            },1,2);
             GameScene.getInstance().render();
         }
 
