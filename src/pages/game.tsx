@@ -17,6 +17,7 @@ const GamePage = () => {
             await GameScene.getInstance().load((outcome: "red" | "green" | "draw") => {
                 setOutcome(outcome);
                 setIsGameOver(true);
+                setIsGameStarted(false);
             }, 1, 1);
             GameScene.getInstance().render();
         }
@@ -46,14 +47,15 @@ const GamePage = () => {
                 setIsModalOpen(false);
                 setIsGameStarted(true)
             }} />
-            <GameOverModal isOpen={isGameOver} onRestart={() => {
+            <GameOverModal isOpen={isGameOver &&
+                !isGameStarted
+            } onRestart={() => {
                 setIsGameOver(false);
                 setIsGameStarted(true);
                 setShouldRestart(!shouldRestart);
             }
             } outcome={outcome} />
             <div id="game-canvas"></div>
-
         </div>
     );
 }
