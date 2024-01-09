@@ -1,30 +1,39 @@
-# React + TypeScript + Vite
+# Tanks Web Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple 3D game with tanks. You can move, you can shoot, you can destroy your enemies. Kill or be killed! 
 
-Currently, two official plugins are available:
+## Technologies used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- TypeScript
+- Tailwind
+- ThreeJS 
 
-## Expanding the ESLint configuration
+## Getting started
+To get started with this project, you need to follow these steps:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+1. Clone the repository
+```bash
+git clone https://github.com/Stasnislau/tanks-client.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install dependencies 
+```bash
+npm install
+```
+3. Run the development server:
+```bash
+npm run dev
+```
+3. Open http://localhost:3000 with your browser to see the result.
+
+## Features
+- Fully operational game with tanks. 
+- AI-controlled enemies (not implemented YET)
+- User-friendly interface
+
+
+## Preview 
+![image](https://github.com/Stasnislau/tanks-client/assets/56834401/85472f0a-31f7-4136-b3b2-8efc650f7c6a)
+![image](https://github.com/Stasnislau/tanks-client/assets/56834401/fa50d804-cb05-4e76-bbb4-2a857e357acb)
+
